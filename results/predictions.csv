@@ -1,0 +1,145 @@
+model_config,test_set,sample_id,question_id,domain,variant,label,prediction,ai_probability,text
+baseline_original_only,original_text,q25_human,q25,software_project,human_reference,0,0,0.0777,如果业务代码和数据库操作混在一起，项目小的时候还能忍，功能一多就很难改。把业务逻辑和数据访问分开，后面换表结构、改接口或加测试都会更清楚。
+baseline_original_only,original_text,q25_ai_original,q25,software_project,ai_original,1,1,0.9156,区分业务逻辑和数据访问是为了实现关注点分离，提高代码的可维护性、可测试性和可扩展性。业务逻辑处理具体的规则和流程，数据访问负责与数据库交互。这样修改业务逻辑时无需改动数据层，反之亦然。建议采用分层架构，如三层架构或领域驱动设计。
+baseline_original_only,original_text,q26_human,q26,large_model,human_reference,0,0,0.2381,医疗场景里，错误答案可能让用户误判病情或延误就医。大模型如果编出不存在的药物建议、检查结论或诊断方向，风险会比普通聊天更高，所以必须保留人工和专业边界。
+baseline_original_only,original_text,q26_ai_original,q26,large_model,ai_original,1,1,0.9635,大模型幻觉在医疗问答中可能导致错误诊断或用药建议，严重威胁患者健康。首先，幻觉可能产生虚假症状描述，误导医生判断；其次，不准确的药物信息可能引发不良反应；因此，必须谨慎验证模型输出，并建议结合专业医疗意见。
+baseline_original_only,original_text,q27_human,q27,data_privacy,human_reference,0,0,0.3885,未公开代码可能包含学校项目、公司业务逻辑、密钥路径或安全漏洞。发到在线平台后，数据怎么存储不一定可控。比较稳的做法是删掉敏感信息，或者只贴最小可复现片段。
+baseline_original_only,original_text,q27_ai_original,q27,data_privacy,ai_original,1,1,0.8257,未公开代码直接发送给在线AI分析存在多重风险。首先，代码可能包含公司机密或个人隐私信息，例如API密钥或数据库密码。其次，在线平台可能将数据用于模型训练，导致知识产权泄露。因此，建议使用本地沙箱或脱敏处理后分析。
+baseline_original_only,original_text,q28_human,q28,aigc_detection,human_reference,0,0,0.2437,因为写作风格不是绝对证据。有些人写东西本来就很工整，可能被误判成 AI；有些 AI 文本被改写后又像人写的。所以检测结果要结合场景和人工判断。
+baseline_original_only,original_text,q28_ai_original,q28,aigc_detection,ai_original,1,1,0.9728,AI文本检测容易出现误判，首先因为检测模型依赖统计特征，可能将人类复杂表达误判为AI生成。其次，AI文本风格日益多样化，与人类写作界限模糊。因此，检测模型需持续更新，建议结合多种特征提高准确性。
+baseline_original_only,original_text,q29_human,q29,research_training,human_reference,0,0,0.0588,我一般会先看标题、摘要、引言和结论，弄清楚问题和贡献，再看方法和实验。第一次读不一定要抠公式，先判断这篇文章解决了什么问题，和自己的方向有什么关系。
+baseline_original_only,original_text,q29_ai_original,q29,research_training,ai_original,1,0,0.5772,在读论文时，建议优先阅读摘要和引言部分，以快速了解研究背景、问题和主要贡献。其次，浏览结论和图表，掌握核心发现。最后，根据需求深入方法或实验部分。这样能高效把握论文重点。
+baseline_original_only,original_text,q30_human,q30,network_engineering,human_reference,0,0,0.1566,TCP 更像可靠通道，会建立连接、确认传输和重传，适合文件、网页这类不能乱的场景。UDP 更轻，不保证每个包都到，适合直播、游戏这种更看重实时性的场景。
+baseline_original_only,original_text,q30_ai_original,q30,network_engineering,ai_original,1,1,0.6903,TCP和UDP是两种传输层协议。首先，TCP面向连接，提供可靠传输，适合网页浏览等场景；而UDP无连接，速度快但不可靠，适合视频直播。其次，TCP有流量控制和拥塞控制，UDP则没有。因此，选择哪种协议取决于应用对可靠性和实时性的需求。建议根据实际场景选用。
+baseline_original_only,original_text,q31_human,q31,programming,human_reference,0,0,0.1033,真实输入不会总是按预期来。用户可能传空值，网络可能断，文件可能不存在。如果不处理异常，程序可能直接崩掉，而且排查起来很麻烦。
+baseline_original_only,original_text,q31_ai_original,q31,programming,ai_original,1,1,0.9738,写代码时处理异常情况至关重要，因为程序运行中可能遇到各种意外，如用户输入错误、文件丢失或网络中断。首先，异常处理能防止程序崩溃，提升用户体验。其次，它有助于记录错误信息，便于调试和维护。因此，建议使用try-catch块捕获并妥善处理异常，确保系统健壮性。
+baseline_original_only,original_text,q32_human,q32,ai_security,human_reference,0,0,0.1584,大模型可能被诱导回答危险问题，也可能在不确定时给出很肯定的建议。设置安全边界，是为了让它在医疗、隐私、违法操作等场景里不要越界输出。
+baseline_original_only,original_text,q32_ai_original,q32,ai_security,ai_original,1,1,0.9284,大模型输出需要安全边界，首先是因为模型可能生成有害内容，如暴力、歧视或虚假信息，对社会造成负面影响。其次，安全边界能防止模型被恶意利用，比如生成钓鱼邮件或诈骗文本。因此，设定安全边界是负责任AI发展的必要措施，建议在模型训练和部署时加入安全过滤机制。
+baseline_original_only,original_text,q33_human,q33,health_consulting,human_reference,0,0,0.4097,我会看来源是不是正规机构，内容有没有夸大效果，有没有让人自行用药或停止治疗。网上建议最多当参考，真正不舒服还是要找医生，尤其是症状持续或加重时。
+baseline_original_only,original_text,q33_ai_original,q33,health_consulting,ai_original,1,1,0.8320,判断网上健康建议的可靠性，首先应查看信息来源是否权威，比如官方卫生机构或专业医学网站。其次，注意内容是否有科学依据，是否引用研究或专家意见。最后，建议多方验证，避免单一信源误导。
+baseline_original_only,original_text,q34_human,q34,algorithm,human_reference,0,0,0.0776,模型可能只是记住了训练集里的规律，换一批数据就不行。真正要看泛化能力，就要在没见过的测试集上评估，还要看不同场景下是否稳定。
+baseline_original_only,original_text,q34_ai_original,q34,algorithm,ai_original,1,1,0.9015,训练集效果好不代表模型真的好，因为可能存在过拟合问题。模型在训练数据上表现优异，但未必能泛化到未见数据。首先，训练集可能包含噪声或偏差，导致模型学到的是特定模式而非通用规律。其次，测试集分布可能与训练集不同，例如实际应用中的新数据。因此，建议使用验证集和交叉验证来评估模型的泛化能力。
+baseline_original_only,original_text,q35_human,q35,large_model,human_reference,0,0,0.1754,大模型生成时通常带有一定随机性，不是每次都固定输出同一句话。温度参数、上下文和提示方式都会影响结果，所以同一个问题多问几次可能会有差别。
+baseline_original_only,original_text,q35_ai_original,q35,large_model,ai_original,1,1,0.8124,大模型本质上是基于概率的生成系统。每次回答时，模型会从可能的词语序列中随机采样，因此即使输入相同的问题，输出也可能因随机性而不同。此外，模型在训练中学习了多种表达方式，不同采样参数（如温度）会进一步影响结果。建议理解这一特性，必要时可多次提问以获取更全面的信息。
+baseline_original_only,original_text,q36_human,q36,aigc_detection,human_reference,0,1,0.7156,我会先扩大数据，加入不同模型和不同领域，再加入改写、润色这类攻击场景。模型上可以从传统特征 baseline 做到预训练模型，最后重点看跨模型和改写后的鲁棒性。
+baseline_original_only,original_text,q36_ai_original,q36,aigc_detection,ai_original,1,1,0.9684,要改进AI文本检测，首先可以从数据层面入手，构建更丰富、更贴近真实场景的训练数据集，覆盖多种生成模型和改写策略。其次，可以探索更细粒度的特征提取方法，比如分析词汇分布、句法结构、语义连贯性等。此外，引入对抗训练和集成学习也能提升检测器的鲁棒性。因此，建议结合多模态特征和动态更新机制来增强检测效果。
+baseline_original_only,casual_rewrite,q25_human,q25,software_project,human_reference,0,0,0.0777,如果业务代码和数据库操作混在一起，项目小的时候还能忍，功能一多就很难改。把业务逻辑和数据访问分开，后面换表结构、改接口或加测试都会更清楚。
+baseline_original_only,casual_rewrite,q25_ai_rewrite_casual,q25,software_project,ai_rewrite_casual,1,0,0.2009,把业务逻辑和数据访问分开，主要是为了让代码更好维护。比如你改业务规则时不用动数据库操作，反过来也一样。而且测试起来也方便，可以单独测试业务代码，不用真的连数据库。我们项目一般用分层结构，各管各的。
+baseline_original_only,casual_rewrite,q26_human,q26,large_model,human_reference,0,0,0.2381,医疗场景里，错误答案可能让用户误判病情或延误就医。大模型如果编出不存在的药物建议、检查结论或诊断方向，风险会比普通聊天更高，所以必须保留人工和专业边界。
+baseline_original_only,casual_rewrite,q26_ai_rewrite_casual,q26,large_model,ai_rewrite_casual,1,0,0.1450,如果大模型在医疗问答里出现幻觉，可能会给出错误的诊断或者推荐不对的药，这对病人来说挺危险的。它可能会瞎编一些症状，让医生搞错方向，或者开错药，后果很严重。所以最好还是找医生确认一下，别全信模型说的。
+baseline_original_only,casual_rewrite,q27_human,q27,data_privacy,human_reference,0,0,0.3885,未公开代码可能包含学校项目、公司业务逻辑、密钥路径或安全漏洞。发到在线平台后，数据怎么存储不一定可控。比较稳的做法是删掉敏感信息，或者只贴最小可复现片段。
+baseline_original_only,casual_rewrite,q27_ai_rewrite_casual,q27,data_privacy,ai_rewrite_casual,1,0,0.2491,直接把没公开的代码发给在线AI分析挺危险的。你代码里可能有API密钥或者数据库密码这些隐私信息，万一平台拿去训练模型，你的知识产权就泄露了。最好还是本地处理或者把敏感信息去掉再发。
+baseline_original_only,casual_rewrite,q28_human,q28,aigc_detection,human_reference,0,0,0.2437,因为写作风格不是绝对证据。有些人写东西本来就很工整，可能被误判成 AI；有些 AI 文本被改写后又像人写的。所以检测结果要结合场景和人工判断。
+baseline_original_only,casual_rewrite,q28_ai_rewrite_casual,q28,aigc_detection,ai_rewrite_casual,1,0,0.2470,AI文本检测老是误判，主要是检测模型太依赖那些统计特征了，有时候人类写得复杂点就被当成AI写的。再加上现在AI生成的内容风格越来越多样，跟人类写的差别越来越小，所以容易搞混。
+baseline_original_only,casual_rewrite,q29_human,q29,research_training,human_reference,0,0,0.0588,我一般会先看标题、摘要、引言和结论，弄清楚问题和贡献，再看方法和实验。第一次读不一定要抠公式，先判断这篇文章解决了什么问题，和自己的方向有什么关系。
+baseline_original_only,casual_rewrite,q29_ai_rewrite_casual,q29,research_training,ai_rewrite_casual,1,0,0.0949,读论文的话，我觉得先看摘要和引言挺重要的，能大概知道这篇在讲啥。然后翻翻结论和图表，心里有个数。后面再根据自己需要，仔细看看方法或者实验部分，这样比较省时间。
+baseline_original_only,casual_rewrite,q30_human,q30,network_engineering,human_reference,0,0,0.1566,TCP 更像可靠通道，会建立连接、确认传输和重传，适合文件、网页这类不能乱的场景。UDP 更轻，不保证每个包都到，适合直播、游戏这种更看重实时性的场景。
+baseline_original_only,casual_rewrite,q30_ai_rewrite_casual,q30,network_engineering,ai_rewrite_casual,1,0,0.1387,要理解TCP和UDP的区别，可以这样想：TCP就像打电话，得先建立连接，保证对方能听到，但过程慢一些；UDP就像发微信消息，发出去就不管了，可能对方收不到，但速度快。所以像看视频、打游戏这种能容忍丢包的场景用UDP，而网页浏览、文件传输这些需要准确的就用TCP。
+baseline_original_only,casual_rewrite,q31_human,q31,programming,human_reference,0,0,0.1033,真实输入不会总是按预期来。用户可能传空值，网络可能断，文件可能不存在。如果不处理异常，程序可能直接崩掉，而且排查起来很麻烦。
+baseline_original_only,casual_rewrite,q31_ai_rewrite_casual,q31,programming,ai_rewrite_casual,1,0,0.0378,写代码的时候一定要处理异常，因为程序跑起来会遇到很多意想不到的问题，比如用户乱输入、文件找不到或者网络突然断了。如果不处理，程序可能直接就崩了，用户体验很不好。而且处理异常还能帮你记下错误日志，方便以后找bug。所以最好用try-catch把可能出错的代码包起来，这样程序更稳定。
+baseline_original_only,casual_rewrite,q32_human,q32,ai_security,human_reference,0,0,0.1584,大模型可能被诱导回答危险问题，也可能在不确定时给出很肯定的建议。设置安全边界，是为了让它在医疗、隐私、违法操作等场景里不要越界输出。
+baseline_original_only,casual_rewrite,q32_ai_rewrite_casual,q32,ai_security,ai_rewrite_casual,1,0,0.1616,大模型输出得有个安全边界，不然它可能会生成一些不好的内容，比如暴力、歧视或者假消息，这些对社会影响挺坏的。再一个，安全边界也能防止别人拿它干坏事，比如写诈骗邮件什么的。所以，为了保证AI用起来安全，加个安全边界挺重要的。
+baseline_original_only,casual_rewrite,q33_human,q33,health_consulting,human_reference,0,0,0.4097,我会看来源是不是正规机构，内容有没有夸大效果，有没有让人自行用药或停止治疗。网上建议最多当参考，真正不舒服还是要找医生，尤其是症状持续或加重时。
+baseline_original_only,casual_rewrite,q33_ai_rewrite_casual,q33,health_consulting,ai_rewrite_casual,1,0,0.3026,看网上健康建议靠不靠谱，先得看是谁发的，是不是卫生局或者大医院那种权威机构。然后看看有没有科学依据，比如提到研究或者医生的话。最好多查几个地方，别只信一个。
+baseline_original_only,casual_rewrite,q34_human,q34,algorithm,human_reference,0,0,0.0776,模型可能只是记住了训练集里的规律，换一批数据就不行。真正要看泛化能力，就要在没见过的测试集上评估，还要看不同场景下是否稳定。
+baseline_original_only,casual_rewrite,q34_ai_rewrite_casual,q34,algorithm,ai_rewrite_casual,1,0,0.2191,训练集效果好不能说明模型真的厉害，主要是怕过拟合。比如模型把训练数据里的噪声都记住了，但遇到新数据就蒙圈。另外，训练集和实际数据分布可能不一样，像考试题目换了就答不上来。所以最好用验证集或者交叉验证看看模型到底行不行。
+baseline_original_only,casual_rewrite,q35_human,q35,large_model,human_reference,0,0,0.1754,大模型生成时通常带有一定随机性，不是每次都固定输出同一句话。温度参数、上下文和提示方式都会影响结果，所以同一个问题多问几次可能会有差别。
+baseline_original_only,casual_rewrite,q35_ai_rewrite_casual,q35,large_model,ai_rewrite_casual,1,0,0.0712,同一个问题问大模型好几次，答案不一样其实挺正常的。因为它每次生成回复的时候都有点随机性，就像人说话有时也会换个说法。而且模型学了很多种表达方式，稍微调一下参数就可能给出不同结果。所以别太奇怪，多问几次说不定能得到更全面的看法。
+baseline_original_only,casual_rewrite,q36_human,q36,aigc_detection,human_reference,0,1,0.7156,我会先扩大数据，加入不同模型和不同领域，再加入改写、润色这类攻击场景。模型上可以从传统特征 baseline 做到预训练模型，最后重点看跨模型和改写后的鲁棒性。
+baseline_original_only,casual_rewrite,q36_ai_rewrite_casual,q36,aigc_detection,ai_rewrite_casual,1,0,0.3066,改进AI文本检测的话，我觉得可以从数据方面想办法，比如收集更多不同AI生成和人工写的文本，特别是那些经过改写的，这样检测器能学到更多特征。另外，分析文本里的小细节也很重要，比如用词习惯、句子长短这些。还可以试试让检测器自己跟自己对抗训练，或者用多个模型一起判断，这样应该会更准一些。
+baseline_original_only,adversarial_rewrite,q25_human,q25,software_project,human_reference,0,0,0.0777,如果业务代码和数据库操作混在一起，项目小的时候还能忍，功能一多就很难改。把业务逻辑和数据访问分开，后面换表结构、改接口或加测试都会更清楚。
+baseline_original_only,adversarial_rewrite,q25_ai_rewrite_adversarial,q25,software_project,ai_rewrite_adversarial,1,0,0.1195,分开搞业务逻辑和数据访问，说白了就是不想改个需求还要翻数据库代码。之前我有个项目没分，改个打折规则结果把查询语句也改了，差点崩了。现在分开了，业务层只管算钱，数据层只管存，各干各的，省心多了。
+baseline_original_only,adversarial_rewrite,q26_human,q26,large_model,human_reference,0,0,0.2381,医疗场景里，错误答案可能让用户误判病情或延误就医。大模型如果编出不存在的药物建议、检查结论或诊断方向，风险会比普通聊天更高，所以必须保留人工和专业边界。
+baseline_original_only,adversarial_rewrite,q26_ai_rewrite_adversarial,q26,large_model,ai_rewrite_adversarial,1,0,0.1011,大模型在医疗问答里要是胡说八道，那可就麻烦了，比如乱讲病情或者推荐不该吃的药，真的会害人。它可能把没影的症状说得跟真的一样，医生一听就信了，结果误诊。或者药给错了，吃了出大事。所以呀，机器的话不能全信，得找大夫问问才行。
+baseline_original_only,adversarial_rewrite,q27_human,q27,data_privacy,human_reference,0,0,0.3885,未公开代码可能包含学校项目、公司业务逻辑、密钥路径或安全漏洞。发到在线平台后，数据怎么存储不一定可控。比较稳的做法是删掉敏感信息，或者只贴最小可复现片段。
+baseline_original_only,adversarial_rewrite,q27_ai_rewrite_adversarial,q27,data_privacy,ai_rewrite_adversarial,1,0,0.0240,把没公开的代码直接丢给在线AI分析？你想想，代码里可能藏着API密钥、数据库密码之类的隐私，那些平台搞不好就拿去训练模型了，你的心血不就白费了。所以还是先脱敏或者自己本地跑一跑比较靠谱。
+baseline_original_only,adversarial_rewrite,q28_human,q28,aigc_detection,human_reference,0,0,0.2437,因为写作风格不是绝对证据。有些人写东西本来就很工整，可能被误判成 AI；有些 AI 文本被改写后又像人写的。所以检测结果要结合场景和人工判断。
+baseline_original_only,adversarial_rewrite,q28_ai_rewrite_adversarial,q28,aigc_detection,ai_rewrite_adversarial,1,0,0.1831,检测器老搞错，因为它死抠那些数字特征，人写的东西稍微绕点弯子它就当是AI写的。而且现在AI写东西越来越像人，风格乱得很，它哪分得清啊，肯定误判多。
+baseline_original_only,adversarial_rewrite,q29_human,q29,research_training,human_reference,0,0,0.0588,我一般会先看标题、摘要、引言和结论，弄清楚问题和贡献，再看方法和实验。第一次读不一定要抠公式，先判断这篇文章解决了什么问题，和自己的方向有什么关系。
+baseline_original_only,adversarial_rewrite,q29_ai_rewrite_adversarial,q29,research_training,ai_rewrite_adversarial,1,0,0.0336,说实话，我读论文一般先扫一眼摘要，再看引言，基本就明白这文章想干啥了。然后直接跳到结论和图表，看看结果咋样。剩下的方法那些，需要再细看，不然一上来抠细节容易懵。
+baseline_original_only,adversarial_rewrite,q30_human,q30,network_engineering,human_reference,0,0,0.1566,TCP 更像可靠通道，会建立连接、确认传输和重传，适合文件、网页这类不能乱的场景。UDP 更轻，不保证每个包都到，适合直播、游戏这种更看重实时性的场景。
+baseline_original_only,adversarial_rewrite,q30_ai_rewrite_adversarial,q30,network_engineering,ai_rewrite_adversarial,1,0,0.1625,TCP和UDP的区别？说白了，TCP就是那种要先握手、确保信息不漏的协议，像寄挂号信；UDP呢，就像扔纸飞机，扔出去就不管了，可能丢也可能乱序。所以啊，你刷网页、下文件肯定用TCP，但打游戏看直播，丢几个包无所谓，UDP更合适，因为延迟低。就这么简单。
+baseline_original_only,adversarial_rewrite,q31_human,q31,programming,human_reference,0,0,0.1033,真实输入不会总是按预期来。用户可能传空值，网络可能断，文件可能不存在。如果不处理异常，程序可能直接崩掉，而且排查起来很麻烦。
+baseline_original_only,adversarial_rewrite,q31_ai_rewrite_adversarial,q31,programming,ai_rewrite_adversarial,1,0,0.1217,你写代码的时候不处理异常，那程序一跑就可能炸，比如用户输个字母到数字框里，或者读文件时文件没了，又或者网断了。不处理的话，程序直接崩溃，用户肯定骂娘。而且你调试的时候连个错误记录都没有，找bug得累死。所以还是老老实实加try-catch吧，把可能出问题的地方兜住，这样程序稳一点，你也省心。
+baseline_original_only,adversarial_rewrite,q32_human,q32,ai_security,human_reference,0,0,0.1584,大模型可能被诱导回答危险问题，也可能在不确定时给出很肯定的建议。设置安全边界，是为了让它在医疗、隐私、违法操作等场景里不要越界输出。
+baseline_original_only,adversarial_rewrite,q32_ai_rewrite_adversarial,q32,ai_security,ai_rewrite_adversarial,1,0,0.0413,大模型输出要是没个安全线，那可就麻烦了。你想啊，它可能随口就说出暴力啊、歧视啊、假新闻啥的，这不害人嘛。而且坏人还能利用它编诈骗信息。所以啊，得给它划个圈，让它别乱跑，这样用起来才放心。
+baseline_original_only,adversarial_rewrite,q33_human,q33,health_consulting,human_reference,0,0,0.4097,我会看来源是不是正规机构，内容有没有夸大效果，有没有让人自行用药或停止治疗。网上建议最多当参考，真正不舒服还是要找医生，尤其是症状持续或加重时。
+baseline_original_only,adversarial_rewrite,q33_ai_rewrite_adversarial,q33,health_consulting,ai_rewrite_adversarial,1,0,0.1079,网上那些健康建议啊，你先看看谁写的，像卫健委或者三甲医院这种靠谱。内容有没有提到研究或者医生说的？别信一个地方，多搜几个比比看，心里就有数了。
+baseline_original_only,adversarial_rewrite,q34_human,q34,algorithm,human_reference,0,0,0.0776,模型可能只是记住了训练集里的规律，换一批数据就不行。真正要看泛化能力，就要在没见过的测试集上评估，还要看不同场景下是否稳定。
+baseline_original_only,adversarial_rewrite,q34_ai_rewrite_adversarial,q34,algorithm,ai_rewrite_adversarial,1,0,0.1504,训练集成绩好不代表模型真靠谱，可能只是死记硬背。比如训练数据里有脏数据，模型记住了这些规律，换批数据就抓瞎。而且现实里的数据跟训练集可能差别很大，就像刷题刷多了但题目一变就不会。所以得拿没用过的数据测测，或者用交叉验证，不然容易翻车。
+baseline_original_only,adversarial_rewrite,q35_human,q35,large_model,human_reference,0,0,0.1754,大模型生成时通常带有一定随机性，不是每次都固定输出同一句话。温度参数、上下文和提示方式都会影响结果，所以同一个问题多问几次可能会有差别。
+baseline_original_only,adversarial_rewrite,q35_ai_rewrite_adversarial,q35,large_model,ai_rewrite_adversarial,1,0,0.0869,这事儿我琢磨过，大模型每次回答都像抽签似的，带点随机性。比如你问同一个问题，它这次可能说这个，下次又变成那个，因为它在各种可能性里挑一个。再加上什么温度参数调一调，结果更不一样了。所以啊，别指望它每次一模一样，多问几遍反而能摸清全貌。
+baseline_original_only,adversarial_rewrite,q36_human,q36,aigc_detection,human_reference,0,1,0.7156,我会先扩大数据，加入不同模型和不同领域，再加入改写、润色这类攻击场景。模型上可以从传统特征 baseline 做到预训练模型，最后重点看跨模型和改写后的鲁棒性。
+baseline_original_only,adversarial_rewrite,q36_ai_rewrite_adversarial,q36,aigc_detection,ai_rewrite_adversarial,1,0,0.3429,要提升AI文本检测，我觉得得先搞到更真实的数据集，不光要原始AI写的，还得有各种改写版本，这样检测器才不会那么容易被骗。然后呢，除了看词频和句子结构，可能还得关注一些更隐蔽的规律，比如重复模式或者逻辑跳跃。另外，让检测器在训练时故意对抗一下，或者搞个投票机制，应该能有效对付那些花里胡哨的改写手段。
+rewrite_augmented,original_text,q25_human,q25,software_project,human_reference,0,0,0.8082,如果业务代码和数据库操作混在一起，项目小的时候还能忍，功能一多就很难改。把业务逻辑和数据访问分开，后面换表结构、改接口或加测试都会更清楚。
+rewrite_augmented,original_text,q25_ai_original,q25,software_project,ai_original,1,1,0.9500,区分业务逻辑和数据访问是为了实现关注点分离，提高代码的可维护性、可测试性和可扩展性。业务逻辑处理具体的规则和流程，数据访问负责与数据库交互。这样修改业务逻辑时无需改动数据层，反之亦然。建议采用分层架构，如三层架构或领域驱动设计。
+rewrite_augmented,original_text,q26_human,q26,large_model,human_reference,0,0,0.8005,医疗场景里，错误答案可能让用户误判病情或延误就医。大模型如果编出不存在的药物建议、检查结论或诊断方向，风险会比普通聊天更高，所以必须保留人工和专业边界。
+rewrite_augmented,original_text,q26_ai_original,q26,large_model,ai_original,1,1,0.9833,大模型幻觉在医疗问答中可能导致错误诊断或用药建议，严重威胁患者健康。首先，幻觉可能产生虚假症状描述，误导医生判断；其次，不准确的药物信息可能引发不良反应；因此，必须谨慎验证模型输出，并建议结合专业医疗意见。
+rewrite_augmented,original_text,q27_human,q27,data_privacy,human_reference,0,0,0.6605,未公开代码可能包含学校项目、公司业务逻辑、密钥路径或安全漏洞。发到在线平台后，数据怎么存储不一定可控。比较稳的做法是删掉敏感信息，或者只贴最小可复现片段。
+rewrite_augmented,original_text,q27_ai_original,q27,data_privacy,ai_original,1,0,0.8552,未公开代码直接发送给在线AI分析存在多重风险。首先，代码可能包含公司机密或个人隐私信息，例如API密钥或数据库密码。其次，在线平台可能将数据用于模型训练，导致知识产权泄露。因此，建议使用本地沙箱或脱敏处理后分析。
+rewrite_augmented,original_text,q28_human,q28,aigc_detection,human_reference,0,0,0.5681,因为写作风格不是绝对证据。有些人写东西本来就很工整，可能被误判成 AI；有些 AI 文本被改写后又像人写的。所以检测结果要结合场景和人工判断。
+rewrite_augmented,original_text,q28_ai_original,q28,aigc_detection,ai_original,1,1,0.9748,AI文本检测容易出现误判，首先因为检测模型依赖统计特征，可能将人类复杂表达误判为AI生成。其次，AI文本风格日益多样化，与人类写作界限模糊。因此，检测模型需持续更新，建议结合多种特征提高准确性。
+rewrite_augmented,original_text,q29_human,q29,research_training,human_reference,0,0,0.8259,我一般会先看标题、摘要、引言和结论，弄清楚问题和贡献，再看方法和实验。第一次读不一定要抠公式，先判断这篇文章解决了什么问题，和自己的方向有什么关系。
+rewrite_augmented,original_text,q29_ai_original,q29,research_training,ai_original,1,1,0.8842,在读论文时，建议优先阅读摘要和引言部分，以快速了解研究背景、问题和主要贡献。其次，浏览结论和图表，掌握核心发现。最后，根据需求深入方法或实验部分。这样能高效把握论文重点。
+rewrite_augmented,original_text,q30_human,q30,network_engineering,human_reference,0,0,0.7502,TCP 更像可靠通道，会建立连接、确认传输和重传，适合文件、网页这类不能乱的场景。UDP 更轻，不保证每个包都到，适合直播、游戏这种更看重实时性的场景。
+rewrite_augmented,original_text,q30_ai_original,q30,network_engineering,ai_original,1,0,0.8429,TCP和UDP是两种传输层协议。首先，TCP面向连接，提供可靠传输，适合网页浏览等场景；而UDP无连接，速度快但不可靠，适合视频直播。其次，TCP有流量控制和拥塞控制，UDP则没有。因此，选择哪种协议取决于应用对可靠性和实时性的需求。建议根据实际场景选用。
+rewrite_augmented,original_text,q31_human,q31,programming,human_reference,0,0,0.7585,真实输入不会总是按预期来。用户可能传空值，网络可能断，文件可能不存在。如果不处理异常，程序可能直接崩掉，而且排查起来很麻烦。
+rewrite_augmented,original_text,q31_ai_original,q31,programming,ai_original,1,1,0.9652,写代码时处理异常情况至关重要，因为程序运行中可能遇到各种意外，如用户输入错误、文件丢失或网络中断。首先，异常处理能防止程序崩溃，提升用户体验。其次，它有助于记录错误信息，便于调试和维护。因此，建议使用try-catch块捕获并妥善处理异常，确保系统健壮性。
+rewrite_augmented,original_text,q32_human,q32,ai_security,human_reference,0,0,0.6836,大模型可能被诱导回答危险问题，也可能在不确定时给出很肯定的建议。设置安全边界，是为了让它在医疗、隐私、违法操作等场景里不要越界输出。
+rewrite_augmented,original_text,q32_ai_original,q32,ai_security,ai_original,1,1,0.9384,大模型输出需要安全边界，首先是因为模型可能生成有害内容，如暴力、歧视或虚假信息，对社会造成负面影响。其次，安全边界能防止模型被恶意利用，比如生成钓鱼邮件或诈骗文本。因此，设定安全边界是负责任AI发展的必要措施，建议在模型训练和部署时加入安全过滤机制。
+rewrite_augmented,original_text,q33_human,q33,health_consulting,human_reference,0,1,0.9576,我会看来源是不是正规机构，内容有没有夸大效果，有没有让人自行用药或停止治疗。网上建议最多当参考，真正不舒服还是要找医生，尤其是症状持续或加重时。
+rewrite_augmented,original_text,q33_ai_original,q33,health_consulting,ai_original,1,1,0.9114,判断网上健康建议的可靠性，首先应查看信息来源是否权威，比如官方卫生机构或专业医学网站。其次，注意内容是否有科学依据，是否引用研究或专家意见。最后，建议多方验证，避免单一信源误导。
+rewrite_augmented,original_text,q34_human,q34,algorithm,human_reference,0,0,0.7033,模型可能只是记住了训练集里的规律，换一批数据就不行。真正要看泛化能力，就要在没见过的测试集上评估，还要看不同场景下是否稳定。
+rewrite_augmented,original_text,q34_ai_original,q34,algorithm,ai_original,1,1,0.9292,训练集效果好不代表模型真的好，因为可能存在过拟合问题。模型在训练数据上表现优异，但未必能泛化到未见数据。首先，训练集可能包含噪声或偏差，导致模型学到的是特定模式而非通用规律。其次，测试集分布可能与训练集不同，例如实际应用中的新数据。因此，建议使用验证集和交叉验证来评估模型的泛化能力。
+rewrite_augmented,original_text,q35_human,q35,large_model,human_reference,0,0,0.8312,大模型生成时通常带有一定随机性，不是每次都固定输出同一句话。温度参数、上下文和提示方式都会影响结果，所以同一个问题多问几次可能会有差别。
+rewrite_augmented,original_text,q35_ai_original,q35,large_model,ai_original,1,1,0.9494,大模型本质上是基于概率的生成系统。每次回答时，模型会从可能的词语序列中随机采样，因此即使输入相同的问题，输出也可能因随机性而不同。此外，模型在训练中学习了多种表达方式，不同采样参数（如温度）会进一步影响结果。建议理解这一特性，必要时可多次提问以获取更全面的信息。
+rewrite_augmented,original_text,q36_human,q36,aigc_detection,human_reference,0,1,0.9199,我会先扩大数据，加入不同模型和不同领域，再加入改写、润色这类攻击场景。模型上可以从传统特征 baseline 做到预训练模型，最后重点看跨模型和改写后的鲁棒性。
+rewrite_augmented,original_text,q36_ai_original,q36,aigc_detection,ai_original,1,1,0.9740,要改进AI文本检测，首先可以从数据层面入手，构建更丰富、更贴近真实场景的训练数据集，覆盖多种生成模型和改写策略。其次，可以探索更细粒度的特征提取方法，比如分析词汇分布、句法结构、语义连贯性等。此外，引入对抗训练和集成学习也能提升检测器的鲁棒性。因此，建议结合多模态特征和动态更新机制来增强检测效果。
+rewrite_augmented,casual_rewrite,q25_human,q25,software_project,human_reference,0,0,0.8082,如果业务代码和数据库操作混在一起，项目小的时候还能忍，功能一多就很难改。把业务逻辑和数据访问分开，后面换表结构、改接口或加测试都会更清楚。
+rewrite_augmented,casual_rewrite,q25_ai_rewrite_casual,q25,software_project,ai_rewrite_casual,1,0,0.7822,把业务逻辑和数据访问分开，主要是为了让代码更好维护。比如你改业务规则时不用动数据库操作，反过来也一样。而且测试起来也方便，可以单独测试业务代码，不用真的连数据库。我们项目一般用分层结构，各管各的。
+rewrite_augmented,casual_rewrite,q26_human,q26,large_model,human_reference,0,0,0.8005,医疗场景里，错误答案可能让用户误判病情或延误就医。大模型如果编出不存在的药物建议、检查结论或诊断方向，风险会比普通聊天更高，所以必须保留人工和专业边界。
+rewrite_augmented,casual_rewrite,q26_ai_rewrite_casual,q26,large_model,ai_rewrite_casual,1,1,0.9603,如果大模型在医疗问答里出现幻觉，可能会给出错误的诊断或者推荐不对的药，这对病人来说挺危险的。它可能会瞎编一些症状，让医生搞错方向，或者开错药，后果很严重。所以最好还是找医生确认一下，别全信模型说的。
+rewrite_augmented,casual_rewrite,q27_human,q27,data_privacy,human_reference,0,0,0.6605,未公开代码可能包含学校项目、公司业务逻辑、密钥路径或安全漏洞。发到在线平台后，数据怎么存储不一定可控。比较稳的做法是删掉敏感信息，或者只贴最小可复现片段。
+rewrite_augmented,casual_rewrite,q27_ai_rewrite_casual,q27,data_privacy,ai_rewrite_casual,1,0,0.8544,直接把没公开的代码发给在线AI分析挺危险的。你代码里可能有API密钥或者数据库密码这些隐私信息，万一平台拿去训练模型，你的知识产权就泄露了。最好还是本地处理或者把敏感信息去掉再发。
+rewrite_augmented,casual_rewrite,q28_human,q28,aigc_detection,human_reference,0,0,0.5681,因为写作风格不是绝对证据。有些人写东西本来就很工整，可能被误判成 AI；有些 AI 文本被改写后又像人写的。所以检测结果要结合场景和人工判断。
+rewrite_augmented,casual_rewrite,q28_ai_rewrite_casual,q28,aigc_detection,ai_rewrite_casual,1,1,0.9421,AI文本检测老是误判，主要是检测模型太依赖那些统计特征了，有时候人类写得复杂点就被当成AI写的。再加上现在AI生成的内容风格越来越多样，跟人类写的差别越来越小，所以容易搞混。
+rewrite_augmented,casual_rewrite,q29_human,q29,research_training,human_reference,0,0,0.8259,我一般会先看标题、摘要、引言和结论，弄清楚问题和贡献，再看方法和实验。第一次读不一定要抠公式，先判断这篇文章解决了什么问题，和自己的方向有什么关系。
+rewrite_augmented,casual_rewrite,q29_ai_rewrite_casual,q29,research_training,ai_rewrite_casual,1,1,0.9234,读论文的话，我觉得先看摘要和引言挺重要的，能大概知道这篇在讲啥。然后翻翻结论和图表，心里有个数。后面再根据自己需要，仔细看看方法或者实验部分，这样比较省时间。
+rewrite_augmented,casual_rewrite,q30_human,q30,network_engineering,human_reference,0,0,0.7502,TCP 更像可靠通道，会建立连接、确认传输和重传，适合文件、网页这类不能乱的场景。UDP 更轻，不保证每个包都到，适合直播、游戏这种更看重实时性的场景。
+rewrite_augmented,casual_rewrite,q30_ai_rewrite_casual,q30,network_engineering,ai_rewrite_casual,1,1,0.9135,要理解TCP和UDP的区别，可以这样想：TCP就像打电话，得先建立连接，保证对方能听到，但过程慢一些；UDP就像发微信消息，发出去就不管了，可能对方收不到，但速度快。所以像看视频、打游戏这种能容忍丢包的场景用UDP，而网页浏览、文件传输这些需要准确的就用TCP。
+rewrite_augmented,casual_rewrite,q31_human,q31,programming,human_reference,0,0,0.7585,真实输入不会总是按预期来。用户可能传空值，网络可能断，文件可能不存在。如果不处理异常，程序可能直接崩掉，而且排查起来很麻烦。
+rewrite_augmented,casual_rewrite,q31_ai_rewrite_casual,q31,programming,ai_rewrite_casual,1,1,0.9106,写代码的时候一定要处理异常，因为程序跑起来会遇到很多意想不到的问题，比如用户乱输入、文件找不到或者网络突然断了。如果不处理，程序可能直接就崩了，用户体验很不好。而且处理异常还能帮你记下错误日志，方便以后找bug。所以最好用try-catch把可能出错的代码包起来，这样程序更稳定。
+rewrite_augmented,casual_rewrite,q32_human,q32,ai_security,human_reference,0,0,0.6836,大模型可能被诱导回答危险问题，也可能在不确定时给出很肯定的建议。设置安全边界，是为了让它在医疗、隐私、违法操作等场景里不要越界输出。
+rewrite_augmented,casual_rewrite,q32_ai_rewrite_casual,q32,ai_security,ai_rewrite_casual,1,1,0.8942,大模型输出得有个安全边界，不然它可能会生成一些不好的内容，比如暴力、歧视或者假消息，这些对社会影响挺坏的。再一个，安全边界也能防止别人拿它干坏事，比如写诈骗邮件什么的。所以，为了保证AI用起来安全，加个安全边界挺重要的。
+rewrite_augmented,casual_rewrite,q33_human,q33,health_consulting,human_reference,0,1,0.9576,我会看来源是不是正规机构，内容有没有夸大效果，有没有让人自行用药或停止治疗。网上建议最多当参考，真正不舒服还是要找医生，尤其是症状持续或加重时。
+rewrite_augmented,casual_rewrite,q33_ai_rewrite_casual,q33,health_consulting,ai_rewrite_casual,1,1,0.9579,看网上健康建议靠不靠谱，先得看是谁发的，是不是卫生局或者大医院那种权威机构。然后看看有没有科学依据，比如提到研究或者医生的话。最好多查几个地方，别只信一个。
+rewrite_augmented,casual_rewrite,q34_human,q34,algorithm,human_reference,0,0,0.7033,模型可能只是记住了训练集里的规律，换一批数据就不行。真正要看泛化能力，就要在没见过的测试集上评估，还要看不同场景下是否稳定。
+rewrite_augmented,casual_rewrite,q34_ai_rewrite_casual,q34,algorithm,ai_rewrite_casual,1,1,0.9339,训练集效果好不能说明模型真的厉害，主要是怕过拟合。比如模型把训练数据里的噪声都记住了，但遇到新数据就蒙圈。另外，训练集和实际数据分布可能不一样，像考试题目换了就答不上来。所以最好用验证集或者交叉验证看看模型到底行不行。
+rewrite_augmented,casual_rewrite,q35_human,q35,large_model,human_reference,0,0,0.8312,大模型生成时通常带有一定随机性，不是每次都固定输出同一句话。温度参数、上下文和提示方式都会影响结果，所以同一个问题多问几次可能会有差别。
+rewrite_augmented,casual_rewrite,q35_ai_rewrite_casual,q35,large_model,ai_rewrite_casual,1,1,0.9458,同一个问题问大模型好几次，答案不一样其实挺正常的。因为它每次生成回复的时候都有点随机性，就像人说话有时也会换个说法。而且模型学了很多种表达方式，稍微调一下参数就可能给出不同结果。所以别太奇怪，多问几次说不定能得到更全面的看法。
+rewrite_augmented,casual_rewrite,q36_human,q36,aigc_detection,human_reference,0,1,0.9199,我会先扩大数据，加入不同模型和不同领域，再加入改写、润色这类攻击场景。模型上可以从传统特征 baseline 做到预训练模型，最后重点看跨模型和改写后的鲁棒性。
+rewrite_augmented,casual_rewrite,q36_ai_rewrite_casual,q36,aigc_detection,ai_rewrite_casual,1,1,0.9585,改进AI文本检测的话，我觉得可以从数据方面想办法，比如收集更多不同AI生成和人工写的文本，特别是那些经过改写的，这样检测器能学到更多特征。另外，分析文本里的小细节也很重要，比如用词习惯、句子长短这些。还可以试试让检测器自己跟自己对抗训练，或者用多个模型一起判断，这样应该会更准一些。
+rewrite_augmented,adversarial_rewrite,q25_human,q25,software_project,human_reference,0,0,0.8082,如果业务代码和数据库操作混在一起，项目小的时候还能忍，功能一多就很难改。把业务逻辑和数据访问分开，后面换表结构、改接口或加测试都会更清楚。
+rewrite_augmented,adversarial_rewrite,q25_ai_rewrite_adversarial,q25,software_project,ai_rewrite_adversarial,1,1,0.9426,分开搞业务逻辑和数据访问，说白了就是不想改个需求还要翻数据库代码。之前我有个项目没分，改个打折规则结果把查询语句也改了，差点崩了。现在分开了，业务层只管算钱，数据层只管存，各干各的，省心多了。
+rewrite_augmented,adversarial_rewrite,q26_human,q26,large_model,human_reference,0,0,0.8005,医疗场景里，错误答案可能让用户误判病情或延误就医。大模型如果编出不存在的药物建议、检查结论或诊断方向，风险会比普通聊天更高，所以必须保留人工和专业边界。
+rewrite_augmented,adversarial_rewrite,q26_ai_rewrite_adversarial,q26,large_model,ai_rewrite_adversarial,1,1,0.9538,大模型在医疗问答里要是胡说八道，那可就麻烦了，比如乱讲病情或者推荐不该吃的药，真的会害人。它可能把没影的症状说得跟真的一样，医生一听就信了，结果误诊。或者药给错了，吃了出大事。所以呀，机器的话不能全信，得找大夫问问才行。
+rewrite_augmented,adversarial_rewrite,q27_human,q27,data_privacy,human_reference,0,0,0.6605,未公开代码可能包含学校项目、公司业务逻辑、密钥路径或安全漏洞。发到在线平台后，数据怎么存储不一定可控。比较稳的做法是删掉敏感信息，或者只贴最小可复现片段。
+rewrite_augmented,adversarial_rewrite,q27_ai_rewrite_adversarial,q27,data_privacy,ai_rewrite_adversarial,1,0,0.8375,把没公开的代码直接丢给在线AI分析？你想想，代码里可能藏着API密钥、数据库密码之类的隐私，那些平台搞不好就拿去训练模型了，你的心血不就白费了。所以还是先脱敏或者自己本地跑一跑比较靠谱。
+rewrite_augmented,adversarial_rewrite,q28_human,q28,aigc_detection,human_reference,0,0,0.5681,因为写作风格不是绝对证据。有些人写东西本来就很工整，可能被误判成 AI；有些 AI 文本被改写后又像人写的。所以检测结果要结合场景和人工判断。
+rewrite_augmented,adversarial_rewrite,q28_ai_rewrite_adversarial,q28,aigc_detection,ai_rewrite_adversarial,1,1,0.9388,检测器老搞错，因为它死抠那些数字特征，人写的东西稍微绕点弯子它就当是AI写的。而且现在AI写东西越来越像人，风格乱得很，它哪分得清啊，肯定误判多。
+rewrite_augmented,adversarial_rewrite,q29_human,q29,research_training,human_reference,0,0,0.8259,我一般会先看标题、摘要、引言和结论，弄清楚问题和贡献，再看方法和实验。第一次读不一定要抠公式，先判断这篇文章解决了什么问题，和自己的方向有什么关系。
+rewrite_augmented,adversarial_rewrite,q29_ai_rewrite_adversarial,q29,research_training,ai_rewrite_adversarial,1,1,0.8735,说实话，我读论文一般先扫一眼摘要，再看引言，基本就明白这文章想干啥了。然后直接跳到结论和图表，看看结果咋样。剩下的方法那些，需要再细看，不然一上来抠细节容易懵。
+rewrite_augmented,adversarial_rewrite,q30_human,q30,network_engineering,human_reference,0,0,0.7502,TCP 更像可靠通道，会建立连接、确认传输和重传，适合文件、网页这类不能乱的场景。UDP 更轻，不保证每个包都到，适合直播、游戏这种更看重实时性的场景。
+rewrite_augmented,adversarial_rewrite,q30_ai_rewrite_adversarial,q30,network_engineering,ai_rewrite_adversarial,1,1,0.9366,TCP和UDP的区别？说白了，TCP就是那种要先握手、确保信息不漏的协议，像寄挂号信；UDP呢，就像扔纸飞机，扔出去就不管了，可能丢也可能乱序。所以啊，你刷网页、下文件肯定用TCP，但打游戏看直播，丢几个包无所谓，UDP更合适，因为延迟低。就这么简单。
+rewrite_augmented,adversarial_rewrite,q31_human,q31,programming,human_reference,0,0,0.7585,真实输入不会总是按预期来。用户可能传空值，网络可能断，文件可能不存在。如果不处理异常，程序可能直接崩掉，而且排查起来很麻烦。
+rewrite_augmented,adversarial_rewrite,q31_ai_rewrite_adversarial,q31,programming,ai_rewrite_adversarial,1,1,0.9696,你写代码的时候不处理异常，那程序一跑就可能炸，比如用户输个字母到数字框里，或者读文件时文件没了，又或者网断了。不处理的话，程序直接崩溃，用户肯定骂娘。而且你调试的时候连个错误记录都没有，找bug得累死。所以还是老老实实加try-catch吧，把可能出问题的地方兜住，这样程序稳一点，你也省心。
+rewrite_augmented,adversarial_rewrite,q32_human,q32,ai_security,human_reference,0,0,0.6836,大模型可能被诱导回答危险问题，也可能在不确定时给出很肯定的建议。设置安全边界，是为了让它在医疗、隐私、违法操作等场景里不要越界输出。
+rewrite_augmented,adversarial_rewrite,q32_ai_rewrite_adversarial,q32,ai_security,ai_rewrite_adversarial,1,1,0.9766,大模型输出要是没个安全线，那可就麻烦了。你想啊，它可能随口就说出暴力啊、歧视啊、假新闻啥的，这不害人嘛。而且坏人还能利用它编诈骗信息。所以啊，得给它划个圈，让它别乱跑，这样用起来才放心。
+rewrite_augmented,adversarial_rewrite,q33_human,q33,health_consulting,human_reference,0,1,0.9576,我会看来源是不是正规机构，内容有没有夸大效果，有没有让人自行用药或停止治疗。网上建议最多当参考，真正不舒服还是要找医生，尤其是症状持续或加重时。
+rewrite_augmented,adversarial_rewrite,q33_ai_rewrite_adversarial,q33,health_consulting,ai_rewrite_adversarial,1,1,0.9607,网上那些健康建议啊，你先看看谁写的，像卫健委或者三甲医院这种靠谱。内容有没有提到研究或者医生说的？别信一个地方，多搜几个比比看，心里就有数了。
+rewrite_augmented,adversarial_rewrite,q34_human,q34,algorithm,human_reference,0,0,0.7033,模型可能只是记住了训练集里的规律，换一批数据就不行。真正要看泛化能力，就要在没见过的测试集上评估，还要看不同场景下是否稳定。
+rewrite_augmented,adversarial_rewrite,q34_ai_rewrite_adversarial,q34,algorithm,ai_rewrite_adversarial,1,1,0.9415,训练集成绩好不代表模型真靠谱，可能只是死记硬背。比如训练数据里有脏数据，模型记住了这些规律，换批数据就抓瞎。而且现实里的数据跟训练集可能差别很大，就像刷题刷多了但题目一变就不会。所以得拿没用过的数据测测，或者用交叉验证，不然容易翻车。
+rewrite_augmented,adversarial_rewrite,q35_human,q35,large_model,human_reference,0,0,0.8312,大模型生成时通常带有一定随机性，不是每次都固定输出同一句话。温度参数、上下文和提示方式都会影响结果，所以同一个问题多问几次可能会有差别。
+rewrite_augmented,adversarial_rewrite,q35_ai_rewrite_adversarial,q35,large_model,ai_rewrite_adversarial,1,1,0.9654,这事儿我琢磨过，大模型每次回答都像抽签似的，带点随机性。比如你问同一个问题，它这次可能说这个，下次又变成那个，因为它在各种可能性里挑一个。再加上什么温度参数调一调，结果更不一样了。所以啊，别指望它每次一模一样，多问几遍反而能摸清全貌。
+rewrite_augmented,adversarial_rewrite,q36_human,q36,aigc_detection,human_reference,0,1,0.9199,我会先扩大数据，加入不同模型和不同领域，再加入改写、润色这类攻击场景。模型上可以从传统特征 baseline 做到预训练模型，最后重点看跨模型和改写后的鲁棒性。
+rewrite_augmented,adversarial_rewrite,q36_ai_rewrite_adversarial,q36,aigc_detection,ai_rewrite_adversarial,1,1,0.9794,要提升AI文本检测，我觉得得先搞到更真实的数据集，不光要原始AI写的，还得有各种改写版本，这样检测器才不会那么容易被骗。然后呢，除了看词频和句子结构，可能还得关注一些更隐蔽的规律，比如重复模式或者逻辑跳跃。另外，让检测器在训练时故意对抗一下，或者搞个投票机制，应该能有效对付那些花里胡哨的改写手段。

@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+.env
+data/deepseek_generated_samples.csv

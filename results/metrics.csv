@@ -1,0 +1,7 @@
+model_config,test_set,threshold,calibration_f1,calibration_accuracy,accuracy,precision,recall,f1,tp,fp,tn,fn,total
+baseline_original_only,original_text,0.65,0.9231,0.9167,0.9167,0.9167,0.9167,0.9167,11,1,11,1,24
+baseline_original_only,casual_rewrite,0.65,0.9231,0.9167,0.4583,0.0000,0.0000,0.0000,0,1,11,12,24
+baseline_original_only,adversarial_rewrite,0.65,0.9231,0.9167,0.4583,0.0000,0.0000,0.0000,0,1,11,12,24
+rewrite_augmented,original_text,0.86,0.7442,0.6944,0.8333,0.8333,0.8333,0.8333,10,2,10,2,24
+rewrite_augmented,casual_rewrite,0.86,0.7442,0.6944,0.8333,0.8333,0.8333,0.8333,10,2,10,2,24
+rewrite_augmented,adversarial_rewrite,0.86,0.7442,0.6944,0.8750,0.8462,0.9167,0.8800,11,2,10,1,24

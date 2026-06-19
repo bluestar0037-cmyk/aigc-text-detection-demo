@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="460" viewBox="0 0 980 460">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="28" y="38" font-size="22" font-family="Arial, Microsoft YaHei" font-weight="700" fill="#111827">F1 under original and rewritten DeepSeek texts</text>
+<line x1="90" y1="340" x2="940" y2="340" stroke="#374151"/>
+<line x1="90" y1="70" x2="90" y2="340" stroke="#374151"/>
+<line x1="85" y1="340.0" x2="940" y2="340.0" stroke="#e5e7eb"/>
+<text x="78" y="344.0" text-anchor="end" font-size="12" font-family="Arial" fill="#4b5563">0%</text>
+<line x1="85" y1="286.0" x2="940" y2="286.0" stroke="#e5e7eb"/>
+<text x="78" y="290.0" text-anchor="end" font-size="12" font-family="Arial" fill="#4b5563">20%</text>
+<line x1="85" y1="232.0" x2="940" y2="232.0" stroke="#e5e7eb"/>
+<text x="78" y="236.0" text-anchor="end" font-size="12" font-family="Arial" fill="#4b5563">40%</text>
+<line x1="85" y1="178.0" x2="940" y2="178.0" stroke="#e5e7eb"/>
+<text x="78" y="182.0" text-anchor="end" font-size="12" font-family="Arial" fill="#4b5563">60%</text>
+<line x1="85" y1="124.0" x2="940" y2="124.0" stroke="#e5e7eb"/>
+<text x="78" y="128.0" text-anchor="end" font-size="12" font-family="Arial" fill="#4b5563">80%</text>
+<line x1="85" y1="70.0" x2="940" y2="70.0" stroke="#e5e7eb"/>
+<text x="78" y="74.0" text-anchor="end" font-size="12" font-family="Arial" fill="#4b5563">100%</text>
+<rect x="185" y="92.5" width="42" height="247.5" fill="#2563eb" rx="4"/>
+<text x="206.0" y="85.5" text-anchor="middle" font-size="12" font-family="Arial" fill="#111827">92%</text>
+<rect x="245" y="115.0" width="42" height="225.0" fill="#16a34a" rx="4"/>
+<text x="266.0" y="108.0" text-anchor="middle" font-size="12" font-family="Arial" fill="#111827">83%</text>
+<text x="236" y="372" text-anchor="middle" font-size="13" font-family="Arial" fill="#111827">original_text</text>
+<rect x="435" y="340.0" width="42" height="0.0" fill="#2563eb" rx="4"/>
+<text x="456.0" y="333.0" text-anchor="middle" font-size="12" font-family="Arial" fill="#111827">0%</text>
+<rect x="495" y="115.0" width="42" height="225.0" fill="#16a34a" rx="4"/>
+<text x="516.0" y="108.0" text-anchor="middle" font-size="12" font-family="Arial" fill="#111827">83%</text>
+<text x="486" y="372" text-anchor="middle" font-size="13" font-family="Arial" fill="#111827">casual_rewrite</text>
+<rect x="685" y="340.0" width="42" height="0.0" fill="#2563eb" rx="4"/>
+<text x="706.0" y="333.0" text-anchor="middle" font-size="12" font-family="Arial" fill="#111827">0%</text>
+<rect x="745" y="102.4" width="42" height="237.6" fill="#16a34a" rx="4"/>
+<text x="766.0" y="95.4" text-anchor="middle" font-size="12" font-family="Arial" fill="#111827">88%</text>
+<text x="736" y="372" text-anchor="middle" font-size="13" font-family="Arial" fill="#111827">adversarial_rewrite</text>
+<rect x="605" y="26" width="14" height="14" fill="#2563eb" rx="2"/>
+<text x="627" y="38" font-size="13" font-family="Arial" fill="#111827">baseline</text>
+<rect x="700" y="26" width="14" height="14" fill="#16a34a" rx="2"/>
+<text x="722" y="38" font-size="13" font-family="Arial" fill="#111827">rewrite augmented</text>
+</svg>

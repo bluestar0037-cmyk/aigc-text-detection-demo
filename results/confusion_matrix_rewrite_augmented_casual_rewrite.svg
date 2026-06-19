@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="405" viewBox="0 0 560 405">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="24" y="34" font-size="19" font-family="Arial, Microsoft YaHei" font-weight="700" fill="#111827">rewrite_augmented / casual_rewrite</text>
+<text x="317" y="84" text-anchor="middle" font-size="14" font-family="Arial" fill="#111827">Predicted label</text>
+<text x="54" y="227" transform="rotate(-90 54 227)" text-anchor="middle" font-size="14" font-family="Arial" fill="#111827">True label</text>
+<text x="261.0" y="100" text-anchor="middle" font-size="13" font-family="Arial" fill="#374151">Human</text>
+<text x="373.0" y="100" text-anchor="middle" font-size="13" font-family="Arial" fill="#374151">AI</text>
+<text x="187" y="176.0" text-anchor="end" font-size="13" font-family="Arial" fill="#374151">Human</text>
+<text x="187" y="288.0" text-anchor="end" font-size="13" font-family="Arial" fill="#374151">AI</text>
+<rect x="205" y="115" width="112" height="112" fill="#2563eb" fill-opacity="0.90" stroke="#ffffff" stroke-width="2"/>
+<text x="261.0" y="163" text-anchor="middle" font-size="17" font-family="Arial" font-weight="700" fill="#111827">TN</text>
+<text x="261.0" y="193" text-anchor="middle" font-size="25" font-family="Arial" fill="#111827">10</text>
+<rect x="317" y="115" width="112" height="112" fill="#2563eb" fill-opacity="0.32" stroke="#ffffff" stroke-width="2"/>
+<text x="373.0" y="163" text-anchor="middle" font-size="17" font-family="Arial" font-weight="700" fill="#111827">FP</text>
+<text x="373.0" y="193" text-anchor="middle" font-size="25" font-family="Arial" fill="#111827">2</text>
+<rect x="205" y="227" width="112" height="112" fill="#2563eb" fill-opacity="0.32" stroke="#ffffff" stroke-width="2"/>
+<text x="261.0" y="275" text-anchor="middle" font-size="17" font-family="Arial" font-weight="700" fill="#111827">FN</text>
+<text x="261.0" y="305" text-anchor="middle" font-size="25" font-family="Arial" fill="#111827">2</text>
+<rect x="317" y="227" width="112" height="112" fill="#2563eb" fill-opacity="0.90" stroke="#ffffff" stroke-width="2"/>
+<text x="373.0" y="275" text-anchor="middle" font-size="17" font-family="Arial" font-weight="700" fill="#111827">TP</text>
+<text x="373.0" y="305" text-anchor="middle" font-size="25" font-family="Arial" fill="#111827">10</text>
+</svg>
