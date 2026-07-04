@@ -1,0 +1,52 @@
+{
+  "rows": 300,
+  "expanded_samples": 1500,
+  "split_counts": {
+    "calibration": 42,
+    "eval": 48,
+    "train": 210
+  },
+  "domain_counts": {
+    "finance": 50,
+    "law": 50,
+    "medicine": 50,
+    "nlpcc_dbqa": 50,
+    "open_qa": 50,
+    "psychology": 50
+  },
+  "missing_cells": 0,
+  "exact_duplicate_text_values": 4,
+  "deepseek_length_outliers": 0,
+  "length_stats": {
+    "human_hc3": {
+      "min": 17,
+      "max": 1835,
+      "mean": 131.03,
+      "median": 100.5
+    },
+    "chatgpt_hc3": {
+      "min": 31,
+      "max": 1337,
+      "mean": 238.71,
+      "median": 247.0
+    },
+    "deepseek_original": {
+      "min": 49,
+      "max": 201,
+      "mean": 98.19,
+      "median": 94.0
+    },
+    "deepseek_rewrite_casual": {
+      "min": 40,
+      "max": 173,
+      "mean": 79.18,
+      "median": 77.0
+    },
+    "deepseek_rewrite_adversarial": {
+      "min": 42,
+      "max": 155,
+      "mean": 80.85,
+      "median": 76.0
+    }
+  }
+}

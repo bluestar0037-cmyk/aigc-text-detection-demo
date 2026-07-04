@@ -1,128 +1,76 @@
-# 面试讲解稿：中文 AIGC 文本检测项目
+# 面试讲解稿：AIGC 文本检测与改写鲁棒性评估
 
-这份文档给你面试前准备用。核心目标是：讲清楚项目动机、数据怎么来、实验怎么做、结果说明什么、局限在哪里、下一步怎么改。
+## 30 秒版本
 
-## 1 分钟版本
+老师您好，我做了一个中文 AIGC 文本检测鲁棒性评估项目。它不是简单判断一段话是不是 AI 写的，而是研究检测器在跨生成器和改写攻击下是否还能可靠。我基于 HC3-Chinese 选了 300 个中文问题，并调用 DeepSeek 为同一批问题生成原始回答、口语化改写和对抗式改写，形成 1500 条同题对齐样本。实验发现，只在 HC3 ChatGPT 上训练的模型在 HC3 上 F1 有 93.88%，但在 DeepSeek 对抗式改写上只有 7.41%；加入同题改写增强后，对抗式改写最佳 F1 提升到 81.40%。
 
-老师您好，我做的是一个中文 AIGC 文本伪造检测鲁棒性评估项目。最开始我用 36 个 DeepSeek 问答做了一个小 demo，后来发现数据规模和公开性不够，所以升级到了 v2：引入 HC3-Chinese 公开数据集，构建了 600 个问题、1200 条人类/ChatGPT 样本，并保留 DeepSeek 原始回答、口语化改写和对抗式改写作为跨生成器攻击测试集。
+## 2 分钟版本
 
-方法上，我实现了多个纯 Python baseline，包括字符 TF-IDF + Logistic Regression、mixed TF-IDF + Logistic Regression、Linear SVM 和统计风格特征模型。实验发现，HC3-only 模型在 HC3 同域测试上 F1 可以达到 96% 到 97%，但迁移到 DeepSeek 对抗式改写文本时 F1 会掉到 0。加入 DeepSeek 原始和改写样本训练后，`aug_mixed_tfidf_logreg` 在 DeepSeek 对抗式改写上的 F1 提升到 40%。
+这个项目的动机是：现在很多 AI 文本检测器在干净数据集上表现不错，但用户实际会使用不同模型，还可能做口语化、润色、改写，所以只看 clean accuracy 不够。
 
-这个结果说明，AIGC 文本检测不能只报告公开干净测试集上的准确率，还要关注跨生成器、跨领域和改写攻击下的鲁棒性。
+我先从公开 HC3-Chinese 数据里选了 6 个中文领域，每个领域 50 个问题，共 300 个问题。每个问题保留 HC3 的人类回答和 ChatGPT 回答，然后用 DeepSeek API 生成三类同题回答：原始回答、口语化改写、对抗式改写。这样每个问题都有 5 种文本，共 1500 条样本。
 
-## 3 分钟版本
+实验上，我把问题按 train、calibration、eval 划分，保证测试问题在训练中完全没出现。模型部分我没有直接调大模型，而是自己用 Python 标准库实现了 TF-IDF、Logistic Regression、阈值校准、按领域指标和错误分析。这样做的好处是 baseline 可解释，能清楚看到检测器依赖哪些表层风格特征。
 
-我的项目题目是“中文 AIGC 文本伪造检测与改写鲁棒性分析”。
+结果很明显：HC3-only 模型在 HC3 ChatGPT 上 F1 约 93.88%，但迁移到 DeepSeek adversarial rewrite 时只有 7.41%。加入 DeepSeek 原始回答后，原始 DeepSeek 检测变好，但对改写攻击仍然不够。加入完整改写增强后，对抗式改写最佳 F1 提升到 81.40%。所以我的结论是：AIGC 检测不能只报告干净公开集准确率，必须做跨生成器、跨改写攻击的鲁棒性评估。
 
-项目动机来自一个真实问题：很多 AI 文本检测器在公开数据集或干净 AI 原始输出上表现很好，但真实场景中 AI 生成内容经常会被改写，也可能来自不同生成器。所以我想验证：在 HC3-Chinese 上表现好的检测器，迁移到 DeepSeek 原始回答和改写回答时是否还稳定？
+## 演示顺序
 
-数据方面，我用了两部分。第一部分是公开的 HC3-Chinese，我选取 finance、law、medicine、nlpcc_dbqa、open_qa、psychology 六个领域，每个领域 100 个问题，共 600 个问题、1200 条样本。第二部分是 DeepSeek attack set，包含 36 个问题，每个问题有人类参考回答、DeepSeek 原始回答、口语化改写和对抗式改写。
-
-方法方面，我先做轻量 baseline，没有一上来用深度学习模型。具体包括字符级 n-gram TF-IDF、mixed TF-IDF、Linear SVM 和统计风格特征。这样做的好处是简单、可解释，能作为后续 Chinese RoBERTa 或 MacBERT 的对照。
-
-实验上，我比较了 HC3-only 和 HC3+DeepSeek 增强两类训练方式。HC3-only 模型只学习公开 ChatGPT 风格；增强模型加入 DeepSeek 原始回答和改写回答，观察是否改善跨生成器鲁棒性。
-
-结果上，HC3-only 模型在 HC3 同域测试上 F1 能达到 96%-97%，但对 DeepSeek 对抗式改写 F1 为 0。加入 DeepSeek 改写增强后，`aug_mixed_tfidf_logreg` 在 HC3 同域上仍有 97.24% F1，在 DeepSeek 原始文本上有 76.92% F1，在 DeepSeek 对抗式改写上有 40.00% F1。这个结果不是说我已经解决了检测问题，而是说明跨生成器和改写攻击仍然很难。
-
-我的理解是，这个项目的价值不在于刷最高准确率，而在于把 AIGC 检测做成一个鲁棒性评估流程：公开数据、跨生成器测试、改写攻击、多 baseline、领域指标和错误分析。
-
-## 演示步骤
-
-进入项目：
+1. 打开 README，先讲项目目标和 v3 数据升级。
+2. 展示 `data/hc3_deepseek_aligned_300.csv`：同一个 question_id 下有 human、ChatGPT、DeepSeek original、casual rewrite、adversarial rewrite。
+3. 展示 `scripts/run_v3_experiment.py`：说明自己实现了 TF-IDF、Logistic Regression、阈值校准和评估。
+4. 运行：
 
 ```powershell
-cd "C:\Users\wu060\Documents\New project 3\aigc_text_detection_demo"
+cd "D:\d盘桌面\aigc-text-detection-demo"
+python scripts\run_v3_experiment.py
 ```
 
-重新运行实验：
+5. 展示 `results_v3/v3_metrics.csv` 和 `results_v3/v3_f1_comparison.svg`。
+6. 最后讲结论：HC3-only 高分不代表鲁棒，改写增强能显著提升对 DeepSeek 对抗改写的检测。
 
-```powershell
-python scripts\run_v2_experiment.py
-```
+## 严苛老师可能问什么
 
-展示结果摘要：
+### 1. 这个项目是不是只是调 API？
 
-```powershell
-type results_v2\v2_summary.md
-```
+不是。DeepSeek API 只用于生成同题数据，也就是构造被检测对象。检测器本身是我自己实现和训练的，包括文本归一化、n-gram 特征、TF-IDF、Logistic Regression、阈值校准和评估输出。项目重点不是“调用 DeepSeek 回答问题”，而是评估 AI 文本检测器的鲁棒性。
 
-展示总指标：
+### 2. 有真实训练吗？
 
-```powershell
-type results_v2\v2_metrics.csv
-```
+有。`run_v3_experiment.py` 会读取 300 个同题问题的数据，把训练集展开成不同训练方案，然后本地训练 Logistic Regression。比如 full rewrite augmentation 模型的训练样本数是 1680，因为每个训练问题会和 4 类 AI 变体配对，并重复人类样本保持类别平衡。
 
-可以打开这些图：
+### 3. 为什么不用 DeepSeek 来判断是不是 AI？
 
-- `results_v2/v2_f1_comparison.svg`
-- `results_v2/v2_error_analysis.csv`
+因为这个项目研究的是“机器生成文本检测器是否鲁棒”。如果直接让 DeepSeek 判断，实验就变成了调用另一个大模型当裁判，不容易解释，也不一定稳定。我这里先做轻量可解释 baseline，能清楚看到模型在不同生成器和改写攻击下的性能变化。
 
-## 高频问题
+### 4. 你怎么避免同一个问题泄漏到测试集？
 
-### Q1：为什么不用深度学习模型？
+我使用 question-level split。也就是说同一个 question_id 的所有文本变体只会出现在 train、calibration、eval 其中一个集合里，不会出现“训练时见过这个问题的 ChatGPT 回答，测试时再测同题 DeepSeek 改写”的情况。
 
-可以回答：
+### 5. 为什么结果里 HC3-only 在 HC3 上很好，但 DeepSeek 改写上很差？
 
-> 我先做轻量 baseline，是为了把问题定义、数据构建、评估流程和误差分析跑通。TF-IDF + Logistic Regression 虽然简单，但透明、可解释，适合作为 baseline。后续我会加入 Chinese RoBERTa 或 MacBERT，比较传统方法和预训练模型在改写场景下的鲁棒性。
+因为 HC3-only 模型主要学习到的是 HC3 ChatGPT 的风格特征，比如更正式、更模板化、更完整的表达。DeepSeek 改写尤其是口语化和对抗式改写，会刻意削弱这些表层特征，所以模型迁移失败。这正是项目想证明的问题：干净数据集成绩不能代表真实鲁棒性。
 
-### Q2：数据是真实 DeepSeek 生成的吗？
+### 6. 为什么 full rewrite augmentation 后 HC3 ChatGPT 指标反而下降一点？
 
-可以回答：
+这是一个合理的 trade-off。加入更多 DeepSeek 改写样本后，模型不再只拟合 HC3 ChatGPT 风格，而是学习更宽的 AI 文本分布，所以在 HC3 单一分布上的 F1 会略降，但在改写攻击上的鲁棒性明显提升。这个现象反而说明实验不是单纯刷分，而是在做跨分布鲁棒性权衡。
 
-> DeepSeek 原始回答、口语化改写和对抗式改写都是真实 API 生成的，生成脚本是 `scripts/generate_deepseek_dataset.py`。v2 的主数据不是我自己编的，而是公开 HC3-Chinese 子集，构建脚本是 `scripts/build_hc3_dataset.py`。
+### 7. 数据够大吗？
 
-### Q3：为什么 HC3 上效果很高，DeepSeek 改写上会掉到 0？
+它还不是正式 benchmark，但已经比最初 36 题 demo 可信很多。现在有 300 个同题问题、1500 条文本，且覆盖 6 个中文领域，可以支持一个科研训练项目和面试展示。下一步可以扩展到更多生成器和更多攻击方式。
 
-可以回答：
+### 8. 为什么不用 BERT / RoBERTa？
 
-> 因为 HC3 的 ChatGPT 文本和 DeepSeek 改写文本分布不一样。模型在 HC3 上学到的可能是 ChatGPT 风格、领域分布和表层表达，一旦换成 DeepSeek，并且再做口语化或对抗式改写，原来的判别信号就不稳定了。
+这版先做轻量 baseline，原因是可解释、成本低、方便复现。它的作用是建立清晰的实验框架和下限结果。后续如果进组，我会把同样的数据划分和评估协议迁移到 Chinese RoBERTa、MacBERT 或其他预训练模型上，比较传统特征和深度模型在改写攻击下的差异。
 
-### Q4：rewrite_augmented 为什么能改善？
+### 9. 你觉得项目最有价值的地方是什么？
 
-可以回答：
+最有价值的是实验设计从“做一个分类器”变成了“做鲁棒性评估”。我没有只报告一个高准确率，而是专门测试跨生成器和改写攻击，发现 HC3-only 模型在 DeepSeek adversarial rewrite 上 F1 只有 7.41%，然后用同题改写增强把最佳结果提升到 81.40%。这个过程有问题、实验、负结果、改进和可解释分析。
 
-> 因为训练阶段加入了 DeepSeek 原始和改写文本，模型不再只看 HC3 的 ChatGPT 风格，而是接触到另一个生成器和改写变体。不过增强后 DeepSeek adversarial F1 也只有 40%，说明这个问题仍然难，需要更强模型和更多攻击数据。
+### 10. 如果继续做，你会怎么做？
 
-### Q5：为什么不直接上大模型或 RoBERTa？
+我会做四件事：第一，扩大生成器，加入 Qwen、GLM、GPT 等；第二，加入更多攻击，比如回译、摘要重写、句式扰动；第三，微调 Chinese RoBERTa 或 MacBERT；第四，引入更系统的鲁棒性评估协议，比如参考 RAID 和 M4 的多领域、多生成器、多攻击设置。
 
-可以回答：
+## 一句话总结
 
-> 我先做传统 baseline，是因为 baseline 透明、可复现、能明确暴露鲁棒性问题。后续可以加入 Chinese RoBERTa 或 MacBERT 微调，把它们和当前 TF-IDF/SVM 结果对比，这样才知道深度模型到底提升在哪里。
-
-### Q6：这个项目最大局限是什么？
-
-可以回答：
-
-> 最大局限是数据规模还小，人类侧不是大规模真实人类语料；同时只测试了 DeepSeek 一个生成器。它更像科研入门 demo，不是正式 benchmark。下一步我会扩展公开人类语料、多模型数据和更强检测模型。
-
-### Q7：和乔老师课题组方向怎么对应？
-
-可以回答：
-
-> 课题组方向里有 AIGC 伪造鉴别、大模型安全和大模型测评。我的项目对应的是 AIGC 文本伪造检测，并且关注改写攻击下的鲁棒性，这属于真实应用中很重要的安全问题。
-
-## 你要避免的说法
-
-不要说：
-
-> 我做出了一个很强的 AI 文本检测器。
-
-更稳的说法是：
-
-> 我做了一个完整的小实验，用真实 DeepSeek 数据观察 AIGC 文本检测在改写场景下的鲁棒性问题，并用改写增强训练做了一个初步改善。
-
-## 关键词速记
-
-- AIGC 伪造鉴别：判断内容是否由 AI 生成、篡改或伪造
-- 改写攻击：通过口语化、换词、句式重组削弱检测痕迹
-- 鲁棒性：输入被扰动后模型性能是否稳定
-- TF-IDF：衡量字符 n-gram 在文本中的重要程度
-- Logistic Regression：可解释的二分类 baseline
-- 阈值校准：在验证集上选择更合适的分类阈值
-- Recall：真正 AI 文本中被检测出来的比例
-- F1：Precision 和 Recall 的综合指标
-- 混淆矩阵：分析 TP、FP、TN、FN
-
-## 最稳自我定位
-
-> 我目前还在 AIGC 安全方向入门阶段，但我已经尝试把一个具体问题拆成公开数据、模型 baseline、跨生成器评估、改写攻击和错误分析几个部分。这个项目让我认识到，AIGC 文本检测不能只看干净公开集准确率，还要评估改写、跨模型和真实应用场景下的鲁棒性。我希望进组后在老师和师兄师姐指导下，把这个方向继续做深。
+这个项目证明了一个很具体的 AIGC 安全问题：检测器不能只在干净公开数据集上看高分，必须测试跨生成器和改写攻击；同题对齐的改写增强可以显著提升中文 AI 文本检测的鲁棒性。

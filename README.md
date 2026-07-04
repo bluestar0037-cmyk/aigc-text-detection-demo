@@ -1,96 +1,84 @@
-# 中文 AIGC 文本伪造检测与改写鲁棒性分析
+# 中文 AIGC 文本检测与改写鲁棒性评估
 
-本项目是一个面向 AIGC 伪造鉴别 / 大模型安全方向的科研训练项目。v2 版本引入公开数据集 HC3-Chinese，并结合自建 DeepSeek 改写攻击集，评估中文 AI 文本检测器在跨数据集、跨生成器和改写攻击下的鲁棒性。
+这是一个面向 AIGC 安全、机器生成文本检测和鲁棒性评估的小型科研训练项目。项目从一个 36 题 DeepSeek demo 升级到 v3：基于公开 HC3-Chinese 数据构建 300 个中文问题的同题对齐数据集，并调用 DeepSeek 生成原始回答、口语化改写和对抗式改写，用来观察检测器在跨生成器、跨改写攻击场景下是否可靠。
 
 核心问题：
 
-> 一个检测器在公开 HC3-Chinese 的 ChatGPT 文本上表现很好，是否能泛化到 DeepSeek 原始回答、口语化改写和对抗式改写文本？
+> 一个检测器如果只在公开 HC3 的 ChatGPT 文本上效果很好，它能否泛化到 DeepSeek 原始回答、口语化改写和对抗式改写？
 
-项目不依赖第三方 Python 包，核心实验使用纯 Python 标准库完成。
+项目不依赖 `sklearn`、`pandas`、`matplotlib` 等第三方包，核心实验使用 Python 标准库实现，方便复现和解释。
 
-## V2 主要升级
+## V3 主要升级
 
-- 引入公开数据集 [HC3-Chinese](https://huggingface.co/datasets/Hello-SimpleAI/HC3-Chinese)，使用 6 个中文领域、600 个问题、1200 条人类/ChatGPT 样本
-- 保留自建 DeepSeek 改写攻击集：36 个问题，包含原始回答、口语化改写、对抗式改写
-- 增加多 baseline：
-  - `hc3_char_tfidf_logreg`
-  - `hc3_mixed_tfidf_logreg`
-  - `hc3_char_tfidf_svm`
-  - `aug_char_tfidf_logreg`
-  - `aug_mixed_tfidf_logreg`
-  - `hc3_stylometric_logreg`
-- 增加按领域指标、逐条预测和高置信错误分析
-- 实验重点从“做一个检测器”升级为“做检测鲁棒性评估”
+- 数据从“36 个自建问题”升级为“300 个 HC3-Chinese 中文问题”。
+- 每个问题保留 5 类文本：HC3 人类回答、HC3 ChatGPT 回答、DeepSeek 原始回答、DeepSeek 口语化改写、DeepSeek 对抗式改写。
+- 总样本规模达到 1500 条文本，其中 300 条人类文本、1200 条 AI 文本。
+- 采用 question-level split：训练集、阈值校准集、测试集问题互不重叠，避免同题泄漏。
+- 比较 HC3-only、DeepSeek clean aligned、casual rewrite augmentation、full rewrite augmentation 等训练方案。
+- 输出总指标、按领域指标、逐条预测、错误样本、特征权重和 F1 对比图。
 
-## V2 结果摘要
+## 数据集
 
-| model | test set | F1 |
-| --- | --- | ---: |
-| `hc3_char_tfidf_logreg` | HC3 in-domain | 97.18% |
-| `hc3_mixed_tfidf_logreg` | HC3 in-domain | 96.59% |
-| `hc3_char_tfidf_logreg` | DeepSeek adversarial rewrite | 0.00% |
-| `hc3_mixed_tfidf_logreg` | DeepSeek adversarial rewrite | 0.00% |
-| `aug_mixed_tfidf_logreg` | HC3 in-domain | 97.24% |
-| `aug_mixed_tfidf_logreg` | DeepSeek original | 76.92% |
-| `aug_mixed_tfidf_logreg` | DeepSeek adversarial rewrite | 40.00% |
+| split | questions | expanded samples |
+| --- | ---: | ---: |
+| train | 210 | 1050 |
+| calibration | 42 | 210 |
+| eval | 48 | 240 |
 
-主要结论：
+覆盖 6 个中文领域：finance、law、medicine、nlpcc_dbqa、open_qa、psychology。
 
-- 公开 HC3-Chinese 上的同域检测可以达到 96%-97% F1
-- 但 HC3-only 模型几乎不能识别 DeepSeek 对抗式改写文本
-- 加入 DeepSeek 原始/改写样本训练后，`aug_mixed_tfidf_logreg` 在 DeepSeek 对抗式改写上 F1 提升到 40%
-- 这说明跨生成器、跨改写攻击泛化仍然困难，不能只报告干净公开集准确率
+每个 eval 条件都使用 48 条人类回答 + 48 条对应 AI 回答进行平衡评估。
 
-## 项目亮点
+## V3 关键结果
 
-- 构建 36 个中文问答问题，覆盖 AIGC 检测、大模型安全、医疗 AI、网络工程、后端项目、隐私保护等领域
-- 每个问题包含 4 类文本：
-  - 人类参考回答
-  - DeepSeek 原始回答
-  - DeepSeek 口语化改写
-  - DeepSeek 对抗式改写
-- 实现 `TF-IDF + Logistic Regression` 基础 AI 文本检测器
-- 对比两种训练方案：
-  - `baseline_original_only`：只用人类参考回答和 DeepSeek 原始回答训练
-  - `rewrite_augmented`：加入 DeepSeek 改写样本进行训练增强
-- 使用留出验证集进行阈值校准，再在未见过的测试问题上评估
-- 输出 Accuracy、Precision、Recall、F1、混淆矩阵、逐条预测、特征权重和实验报告
+| model | test set | F1 | accuracy |
+| --- | --- | ---: | ---: |
+| `hc3_mixed_tfidf_logreg` | HC3 ChatGPT | 93.88% | 93.75% |
+| `hc3_mixed_tfidf_logreg` | DeepSeek original | 61.33% | 69.79% |
+| `hc3_mixed_tfidf_logreg` | DeepSeek casual rewrite | 14.29% | 50.00% |
+| `hc3_mixed_tfidf_logreg` | DeepSeek adversarial rewrite | 7.41% | 47.92% |
+| `casual_aug_mixed_tfidf_logreg` | DeepSeek adversarial rewrite | 62.34% | 69.79% |
+| `rewrite_aligned_char_tfidf_logreg` | DeepSeek adversarial rewrite | 81.40% | 83.33% |
+| `rewrite_aligned_mixed_tfidf_logreg` | DeepSeek adversarial rewrite | 79.57% | 80.21% |
+
+主要观察：
+
+- HC3-only 模型在 HC3 ChatGPT 上 F1 接近 94%，但面对 DeepSeek 改写文本明显失效。
+- 只加入 DeepSeek 原始回答可以改善原始 DeepSeek 检测，但不能解决改写攻击。
+- 加入口语化改写训练后，对抗式改写 F1 从 7.41% 提升到 62.34%，说明改写增强有迁移效果。
+- 加入完整同题改写增强后，对抗式改写最佳 F1 达到 81.40%，证明同题对齐数据能显著提升鲁棒性。
 
 ## 项目结构
 
 ```text
-aigc_text_detection_demo/
+aigc-text-detection-demo/
 ├── data/
-│   ├── question_bank.csv
-│   ├── deepseek_dataset.csv
 │   ├── hc3_chinese_public_subset.csv
-│   ├── questions.csv
-│   └── sample_dataset.csv
+│   ├── hc3_deepseek_aligned_300.csv
+│   └── deepseek_dataset.csv
 ├── docs/
 │   ├── github_publish_guide.md
 │   ├── interview_guide.md
-│   └── project_report.md
+│   ├── project_report.md
+│   └── resume_project_bullets.md
 ├── results/
-│   ├── metric_bars.svg
-│   ├── metrics.csv
-│   ├── metrics_by_domain.csv
-│   ├── predictions.csv
-│   ├── summary.md
-│   └── ...
+│   └── v1 small demo outputs
 ├── results_v2/
-│   ├── v2_metrics.csv
-│   ├── v2_metrics_by_domain.csv
-│   ├── v2_error_analysis.csv
-│   ├── v2_f1_comparison.svg
-│   └── v2_summary.md
-├── scripts/
-│   ├── build_hc3_dataset.py
-│   ├── generate_deepseek_dataset.py
-│   ├── run_v2_experiment.py
-│   └── run_experiment.py
-├── .gitignore
-├── README.md
-└── requirements.txt
+│   └── public HC3 + separate DeepSeek attack-set outputs
+├── results_v3/
+│   ├── v3_metrics.csv
+│   ├── v3_metrics_by_domain.csv
+│   ├── v3_predictions.csv
+│   ├── v3_error_analysis.csv
+│   ├── v3_f1_comparison.svg
+│   ├── v3_summary.md
+│   └── deepseek_aligned_usage.json
+└── scripts/
+    ├── build_hc3_dataset.py
+    ├── generate_deepseek_aligned_hc3.py
+    ├── run_v3_experiment.py
+    ├── run_v2_experiment.py
+    └── run_experiment.py
 ```
 
 ## 快速运行
@@ -98,143 +86,71 @@ aigc_text_detection_demo/
 进入项目目录：
 
 ```powershell
-cd "C:\Users\wu060\Documents\New project 3\aigc_text_detection_demo"
+cd "D:\d盘桌面\aigc-text-detection-demo"
 ```
 
-运行 v2 主实验：
+运行 v3 主实验：
 
 ```powershell
-python scripts\run_v2_experiment.py
+python scripts\run_v3_experiment.py
 ```
 
-运行 v1 DeepSeek demo：
-
-```powershell
-python scripts\run_experiment.py
-```
-
-核心脚本只使用 Python 标准库，不需要安装 `sklearn`、`pandas` 或 `matplotlib`。
-
-## 重新生成 DeepSeek 数据
-
-如果要重新调用 DeepSeek API：
-
-```powershell
-set DEEPSEEK_API_KEY=你的key
-python scripts\generate_deepseek_dataset.py
-```
-
-脚本会读取：
+主要输出：
 
 ```text
-data/question_bank.csv
+results_v3/v3_metrics.csv
+results_v3/v3_metrics_by_domain.csv
+results_v3/v3_predictions.csv
+results_v3/v3_error_analysis.csv
+results_v3/v3_f1_comparison.svg
+results_v3/v3_summary.md
 ```
 
-并生成：
+## 重新生成 DeepSeek 同题数据
 
-```text
-data/deepseek_dataset.csv
-results/deepseek_usage.json
+如果需要重新调用 DeepSeek API：
+
+```powershell
+$env:DEEPSEEK_API_KEY="你的 API key"
+python scripts\generate_deepseek_aligned_hc3.py
+Remove-Item Env:\DEEPSEEK_API_KEY
 ```
 
-API key 只从环境变量读取，不会写入任何项目文件。
+本项目中的 v3 生成记录：
 
-## V1 实验设计
+- model: `deepseek-chat`
+- target rows: 300
+- 当前数据集行数: 300
+- 已记录累计用量：144054 total tokens，不含最初 6 行 dry run
+- 最后一次补跑用量见 `results_v3/deepseek_aligned_usage.json`
+- 累计用量说明见 `results_v3/deepseek_aligned_usage_total.json`
+- API key 只从环境变量读取，不写入任何项目文件
 
-### 数据划分
+## 方法概述
 
-- 36 个问题
-- 24 个训练问题
-- 12 个测试问题
+1. 从 HC3-Chinese 中选取 6 个中文领域，每个领域 50 个问题。
+2. 为每个问题保留 HC3 人类回答和 HC3 ChatGPT 回答。
+3. 调用 DeepSeek 为同一问题生成三种回答：原始回答、口语化改写、对抗式改写。
+4. 使用字符 n-gram / 混合 n-gram 特征构建 TF-IDF 表示。
+5. 使用 Logistic Regression 训练二分类检测器。
+6. 在 calibration split 上选择分类阈值。
+7. 在未见过问题的 eval split 上分别评估 ChatGPT、DeepSeek 原始、DeepSeek 口语化改写、DeepSeek 对抗式改写。
 
-训练问题中再留出 6 个问题做阈值校准：
-
-- fit set：用于训练模型
-- calibration set：用于选择最佳分类阈值
-- eval set：完全未见过的问题，用于最终评估
-
-### 方法
-
-1. 中文文本归一化，去除空白和常见标点
-2. 提取字符级 `1-gram / 2-gram / 3-gram`
-3. 计算 TF-IDF 特征
-4. 使用 Logistic Regression 二分类
-5. 在验证集上选择阈值
-6. 在原始文本、口语化改写、对抗式改写三个测试集上评估
-
-## 当前结果
-
-| model config | test set | threshold | accuracy | precision | recall | F1 |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| baseline_original_only | original_text | 0.65 | 91.67% | 91.67% | 91.67% | 91.67% |
-| baseline_original_only | casual_rewrite | 0.65 | 45.83% | 0.00% | 0.00% | 0.00% |
-| baseline_original_only | adversarial_rewrite | 0.65 | 45.83% | 0.00% | 0.00% | 0.00% |
-| rewrite_augmented | original_text | 0.86 | 83.33% | 83.33% | 83.33% | 83.33% |
-| rewrite_augmented | casual_rewrite | 0.86 | 83.33% | 83.33% | 83.33% | 83.33% |
-| rewrite_augmented | adversarial_rewrite | 0.86 | 87.50% | 84.62% | 91.67% | 88.00% |
-
-核心观察：
-
-- baseline 对 DeepSeek 原始文本效果较好，F1 为 91.67%
-- baseline 对两种改写文本完全失效，F1 为 0.00%
-- 加入改写样本训练后，对抗式改写 F1 提升到 88.00%
-- 说明 AIGC 文本检测不能只看原始模型输出，还必须评估改写攻击下的鲁棒性
-
-## 主要结果文件
-
-- `results/summary.md`：自动生成的实验总结
-- `results/metrics.csv`：总指标
-- `results/metrics_by_domain.csv`：按领域统计的指标
-- `results/predictions.csv`：逐条样本预测概率
-- `results/metric_bars.svg`：F1 对比图
-- `results/confusion_matrix_*.svg`：混淆矩阵图
-- `results/top_features_baseline_original_only.md`：baseline 特征权重
-- `results/top_features_rewrite_augmented.md`：增强模型特征权重
-- `results/deepseek_usage.json`：DeepSeek API token 用量记录
-
-## 项目结论
-
-这个 demo 支持一个清晰结论：基础 AI 文本检测器容易学习原始模型输出中的模板化风格特征，但这些特征会被口语化改写和对抗式改写削弱。通过加入改写样本训练和阈值校准，可以显著改善改写场景下的召回率和 F1。
-
-## 局限
-
-- 人类侧是小规模人工整理参考回答，不是大规模独立人类语料
-- 数据规模仍然较小，不适合作为正式 benchmark
-- 只测试 DeepSeek 单一生成器，尚未覆盖 Qwen、GPT 等多模型场景
-- 当前模型是轻量 baseline，后续应加入 Chinese RoBERTa、MacBERT 等更强模型
-
-## 可写进简历
+## 可以写进简历
 
 ```markdown
-### 中文 AIGC 文本伪造检测与改写鲁棒性分析
-
-- 构建 36 个中文问答问题，调用 DeepSeek 生成原始回答、口语化改写和对抗式改写文本，形成 AIGC 文本检测实验数据集
-- 使用纯 Python 实现字符级 n-gram、TF-IDF 和 Logistic Regression 检测器，完成训练、阈值校准、评估和可视化分析
-- 对比原始文本训练 baseline 与改写增强训练方案，观察 baseline 在改写攻击下 F1 从 91.67% 下降至 0.00%
-- 通过加入改写样本训练，将对抗式改写测试集 F1 提升至 88.00%，初步验证改写增强对检测鲁棒性的作用
+### 中文 AIGC 文本检测与改写鲁棒性评估
+- 基于 HC3-Chinese 构建 300 个中文问题的同题对齐数据集，调用 DeepSeek 生成原始回答、口语化改写和对抗式改写，形成 1500 条人类/AI 文本样本。
+- 使用 Python 标准库实现 TF-IDF、Logistic Regression、阈值校准、按领域评估和错误分析，完成可复现实验流程。
+- 对比 HC3-only、DeepSeek clean aligned、改写增强等训练方案，发现 HC3-only 模型在 DeepSeek 对抗式改写上 F1 仅 7.41%，完整改写增强后最佳提升至 81.40%。
+- 输出逐条预测、领域指标、错误样本和特征权重分析，验证跨生成器和改写攻击场景下的检测鲁棒性问题。
 ```
 
 ## 参考方向
 
+- HC3: Human ChatGPT Comparison Corpus  
+  https://github.com/Hello-SimpleAI/chatgpt-comparison-detection
 - M4: Multi-generator, Multi-domain, and Multi-lingual Black-Box Machine-Generated Text Detection  
   https://arxiv.org/abs/2305.14902
 - RAID: A Shared Benchmark for Robust Evaluation of Machine-Generated Text Detectors  
   https://arxiv.org/abs/2405.07940
-- HC3: Human ChatGPT Comparison Corpus  
-  https://github.com/Hello-SimpleAI/chatgpt-comparison-detection
-## 构建公开 HC3-Chinese 子集
-
-如果需要重新构建公开数据子集：
-
-```powershell
-python scripts\build_hc3_dataset.py
-```
-
-该脚本会从 HuggingFace 下载 HC3-Chinese 的 6 个中文领域 JSONL 文件，抽取每个领域 100 个问题，生成：
-
-```text
-data/hc3_chinese_public_subset.csv
-results_v2/hc3_dataset_summary.json
-```
-
-原始 JSONL 文件会放入 `data/raw_hc3_chinese/`，该目录已加入 `.gitignore`。

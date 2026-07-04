@@ -1,0 +1,39 @@
+{
+  "model": "deepseek-chat",
+  "target_rows": 300,
+  "current_dataset_rows": 300,
+  "known_usage_runs": [
+    {
+      "run": "full_generation_after_initial_dry_run",
+      "generated_rows": 294,
+      "prompt_tokens": 82133,
+      "completion_tokens": 59014,
+      "total_tokens": 141147,
+      "cached_tokens": 768
+    },
+    {
+      "run": "quality_fix_short_rows_round_1",
+      "generated_rows": 5,
+      "prompt_tokens": 1353,
+      "completion_tokens": 723,
+      "total_tokens": 2076,
+      "cached_tokens": 1280
+    },
+    {
+      "run": "quality_fix_short_rows_round_2",
+      "generated_rows": 2,
+      "prompt_tokens": 536,
+      "completion_tokens": 295,
+      "total_tokens": 831,
+      "cached_tokens": 512
+    }
+  ],
+  "known_usage_total_excluding_initial_6_row_dry_run": {
+    "generated_rows": 301,
+    "prompt_tokens": 84022,
+    "completion_tokens": 60032,
+    "total_tokens": 144054,
+    "cached_tokens": 2560
+  },
+  "note": "The initial 6-row dry run happened before cumulative logging and is not included here. The true total usage is slightly higher than the known total."
+}

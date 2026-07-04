@@ -1,0 +1,12 @@
+{
+  "model": "deepseek-chat",
+  "target_rows": 300,
+  "generated_new_rows_this_run": 2,
+  "usage_for_new_rows_this_run": {
+    "prompt_tokens": 536,
+    "completion_tokens": 295,
+    "total_tokens": 831,
+    "cached_tokens": 512
+  },
+  "note": "Rows skipped from previous runs are not included in this run usage."
+}
