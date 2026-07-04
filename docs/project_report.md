@@ -6,9 +6,105 @@
 
 但真实场景中的 AI 文本往往不会保持原始输出形态。它可能经过口语化改写、句式重组、人工润色或另一个模型的二次改写。因此，一个检测器如果只在原始 AI 输出上表现好，并不能说明它在真实场景中可靠。
 
-本项目围绕“改写是否会削弱 AI 文本检测器”设计了一个小规模实验。
+本项目围绕“改写是否会削弱 AI 文本检测器”设计实验。v1 使用自建 DeepSeek 小数据集验证改写攻击现象；v2 引入公开 HC3-Chinese 数据集，并加入多 baseline、跨生成器测试和错误分析，使项目从 demo 升级为鲁棒性评估。
 
-## 2. 实验目标
+## 2. V2 升级目标
+
+v2 版本重点解决 v1 的三个弱点：
+
+1. 数据来源不够公开：引入 HC3-Chinese 公开数据集。
+2. 数据规模较小：扩展到 600 个公开问题、1200 条 HC3 样本。
+3. 实验对照不足：加入多个 baseline、跨数据集评估、领域指标和错误分析。
+
+新的研究问题是：
+
+> 在 HC3-Chinese 上表现很好的检测器，是否能泛化到 DeepSeek 原始文本和改写攻击文本？
+
+## 3. 数据构建
+
+v2 使用两部分数据：
+
+| 数据 | 规模 | 用途 |
+| --- | ---: | --- |
+| HC3-Chinese public subset | 600 个问题，1200 条样本 | 公开主 benchmark，人类 vs ChatGPT |
+| DeepSeek attack set | 36 个问题，144 条样本 | 跨生成器与改写攻击测试 |
+
+HC3-Chinese 子集覆盖 6 个领域：
+
+- finance
+- law
+- medicine
+- nlpcc_dbqa
+- open_qa
+- psychology
+
+DeepSeek attack set 包含四类文本：
+
+- human reference
+- DeepSeek original
+- DeepSeek casual rewrite
+- DeepSeek adversarial rewrite
+
+## 4. 方法
+
+v2 比较 6 个 baseline：
+
+| model | 说明 |
+| --- | --- |
+| `hc3_char_tfidf_logreg` | HC3-only，字符 n-gram TF-IDF + Logistic Regression |
+| `hc3_mixed_tfidf_logreg` | HC3-only，字符 n-gram + 粗粒度连续中文片段 TF-IDF |
+| `hc3_char_tfidf_svm` | HC3-only，字符 n-gram TF-IDF + Linear SVM |
+| `aug_char_tfidf_logreg` | HC3 + DeepSeek 改写增强 |
+| `aug_mixed_tfidf_logreg` | HC3 + DeepSeek 改写增强，mixed 特征 |
+| `hc3_stylometric_logreg` | 统计风格特征 baseline |
+
+所有实验均使用纯 Python 标准库实现。
+
+## 5. V2 主要结果
+
+| model | test set | F1 |
+| --- | --- | ---: |
+| `hc3_char_tfidf_logreg` | HC3 in-domain | 97.18% |
+| `hc3_mixed_tfidf_logreg` | HC3 in-domain | 96.59% |
+| `hc3_char_tfidf_logreg` | DeepSeek adversarial rewrite | 0.00% |
+| `hc3_mixed_tfidf_logreg` | DeepSeek adversarial rewrite | 0.00% |
+| `aug_mixed_tfidf_logreg` | HC3 in-domain | 97.24% |
+| `aug_mixed_tfidf_logreg` | DeepSeek original | 76.92% |
+| `aug_mixed_tfidf_logreg` | DeepSeek adversarial rewrite | 40.00% |
+
+完整结果见 `results_v2/v2_summary.md` 和 `results_v2/v2_metrics.csv`。
+
+## 6. V2 分析
+
+HC3-only 模型在公开数据同域测试上可以达到 96%-97% F1，说明传统 TF-IDF baseline 对公开 ChatGPT 风格文本有较强识别能力。
+
+但同一个模型迁移到 DeepSeek 对抗式改写文本时，F1 下降到 0。这说明检测器在公开数据集上表现好，不等于具备跨生成器、跨改写攻击泛化能力。
+
+加入 DeepSeek 原始和改写样本后，`aug_mixed_tfidf_logreg` 在 DeepSeek 原始文本上达到 76.92% F1，在对抗式改写上达到 40.00% F1。提升仍有限，但它更真实地反映了鲁棒性问题：改写攻击不是简单靠扩大干净训练集就能完全解决。
+
+## 7. 与 RAID/M4 思路的对应
+
+本项目没有完整复现 RAID 或 M4，但吸收了它们的评估思想：
+
+- 不只看 clean test accuracy
+- 关注跨领域、跨生成器、跨攻击方式
+- 报告错误样本和领域指标
+- 把鲁棒性下降作为核心分析对象
+
+## 8. 局限与后续
+
+- HC3 子集是紧凑版，不是完整 12.9k 行数据
+- DeepSeek 攻击集仍然只有 36 个问题
+- 当前还没有微调 Chinese RoBERTa / MacBERT
+- 对抗改写来自提示词生成，不是系统攻击库
+
+后续最有价值的方向是加入中文预训练模型，并扩大 DeepSeek/Qwen/GPT 多生成器数据。
+
+---
+
+以下保留 v1 小规模 DeepSeek demo 的原始报告，作为项目演进记录。
+
+## V1 实验目标
 
 本项目关注三个问题：
 

@@ -1,0 +1,15 @@
+{
+  "dataset": "Hello-SimpleAI/HC3-Chinese",
+  "source_url": "https://huggingface.co/datasets/Hello-SimpleAI/HC3-Chinese",
+  "license": "cc-by-sa-4.0",
+  "domains": {
+    "finance": 100,
+    "law": 100,
+    "medicine": 100,
+    "nlpcc_dbqa": 100,
+    "open_qa": 100,
+    "psychology": 100
+  },
+  "max_questions_per_domain": 100,
+  "random_seed": 20260704
+}

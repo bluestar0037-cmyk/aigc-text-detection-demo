@@ -1,10 +1,45 @@
 # 中文 AIGC 文本伪造检测与改写鲁棒性分析
 
-本项目是一个面向 AIGC 伪造鉴别 / 大模型安全方向的科研入门 demo。它使用真实 DeepSeek API 生成文本，验证一个实际问题：
+本项目是一个面向 AIGC 伪造鉴别 / 大模型安全方向的科研训练项目。v2 版本引入公开数据集 HC3-Chinese，并结合自建 DeepSeek 改写攻击集，评估中文 AI 文本检测器在跨数据集、跨生成器和改写攻击下的鲁棒性。
 
-> 只在“原始 AI 输出”上训练的基础检测器，面对口语化改写和对抗式改写时会明显失效；加入改写样本训练并进行阈值校准后，检测器的鲁棒性可以明显改善。
+核心问题：
+
+> 一个检测器在公开 HC3-Chinese 的 ChatGPT 文本上表现很好，是否能泛化到 DeepSeek 原始回答、口语化改写和对抗式改写文本？
 
 项目不依赖第三方 Python 包，核心实验使用纯 Python 标准库完成。
+
+## V2 主要升级
+
+- 引入公开数据集 [HC3-Chinese](https://huggingface.co/datasets/Hello-SimpleAI/HC3-Chinese)，使用 6 个中文领域、600 个问题、1200 条人类/ChatGPT 样本
+- 保留自建 DeepSeek 改写攻击集：36 个问题，包含原始回答、口语化改写、对抗式改写
+- 增加多 baseline：
+  - `hc3_char_tfidf_logreg`
+  - `hc3_mixed_tfidf_logreg`
+  - `hc3_char_tfidf_svm`
+  - `aug_char_tfidf_logreg`
+  - `aug_mixed_tfidf_logreg`
+  - `hc3_stylometric_logreg`
+- 增加按领域指标、逐条预测和高置信错误分析
+- 实验重点从“做一个检测器”升级为“做检测鲁棒性评估”
+
+## V2 结果摘要
+
+| model | test set | F1 |
+| --- | --- | ---: |
+| `hc3_char_tfidf_logreg` | HC3 in-domain | 97.18% |
+| `hc3_mixed_tfidf_logreg` | HC3 in-domain | 96.59% |
+| `hc3_char_tfidf_logreg` | DeepSeek adversarial rewrite | 0.00% |
+| `hc3_mixed_tfidf_logreg` | DeepSeek adversarial rewrite | 0.00% |
+| `aug_mixed_tfidf_logreg` | HC3 in-domain | 97.24% |
+| `aug_mixed_tfidf_logreg` | DeepSeek original | 76.92% |
+| `aug_mixed_tfidf_logreg` | DeepSeek adversarial rewrite | 40.00% |
+
+主要结论：
+
+- 公开 HC3-Chinese 上的同域检测可以达到 96%-97% F1
+- 但 HC3-only 模型几乎不能识别 DeepSeek 对抗式改写文本
+- 加入 DeepSeek 原始/改写样本训练后，`aug_mixed_tfidf_logreg` 在 DeepSeek 对抗式改写上 F1 提升到 40%
+- 这说明跨生成器、跨改写攻击泛化仍然困难，不能只报告干净公开集准确率
 
 ## 项目亮点
 
@@ -28,6 +63,7 @@ aigc_text_detection_demo/
 ├── data/
 │   ├── question_bank.csv
 │   ├── deepseek_dataset.csv
+│   ├── hc3_chinese_public_subset.csv
 │   ├── questions.csv
 │   └── sample_dataset.csv
 ├── docs/
@@ -41,8 +77,16 @@ aigc_text_detection_demo/
 │   ├── predictions.csv
 │   ├── summary.md
 │   └── ...
+├── results_v2/
+│   ├── v2_metrics.csv
+│   ├── v2_metrics_by_domain.csv
+│   ├── v2_error_analysis.csv
+│   ├── v2_f1_comparison.svg
+│   └── v2_summary.md
 ├── scripts/
+│   ├── build_hc3_dataset.py
 │   ├── generate_deepseek_dataset.py
+│   ├── run_v2_experiment.py
 │   └── run_experiment.py
 ├── .gitignore
 ├── README.md
@@ -57,7 +101,13 @@ aigc_text_detection_demo/
 cd "C:\Users\wu060\Documents\New project 3\aigc_text_detection_demo"
 ```
 
-运行实验：
+运行 v2 主实验：
+
+```powershell
+python scripts\run_v2_experiment.py
+```
+
+运行 v1 DeepSeek demo：
 
 ```powershell
 python scripts\run_experiment.py
@@ -89,7 +139,7 @@ results/deepseek_usage.json
 
 API key 只从环境变量读取，不会写入任何项目文件。
 
-## 实验设计
+## V1 实验设计
 
 ### 数据划分
 
@@ -172,3 +222,19 @@ API key 只从环境变量读取，不会写入任何项目文件。
   https://arxiv.org/abs/2405.07940
 - HC3: Human ChatGPT Comparison Corpus  
   https://github.com/Hello-SimpleAI/chatgpt-comparison-detection
+## 构建公开 HC3-Chinese 子集
+
+如果需要重新构建公开数据子集：
+
+```powershell
+python scripts\build_hc3_dataset.py
+```
+
+该脚本会从 HuggingFace 下载 HC3-Chinese 的 6 个中文领域 JSONL 文件，抽取每个领域 100 个问题，生成：
+
+```text
+data/hc3_chinese_public_subset.csv
+results_v2/hc3_dataset_summary.json
+```
+
+原始 JSONL 文件会放入 `data/raw_hc3_chinese/`，该目录已加入 `.gitignore`。
